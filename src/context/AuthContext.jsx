@@ -9,12 +9,23 @@ export function AuthProvider({ children }) {
   const [error, setError] = useState(null);
 
   // ✅ Check authentication on app load
+  // ✅ Check authentication on app load
   useEffect(() => {
+    // TEMPORARY: Bypass login for demo
+    setUser({
+      first_name: 'Harman',
+      email: 'harman@local.dev',
+      authenticated: true
+    });
+    setLoading(false);
+
+    /* 
     const token = localStorage.getItem('access_token');
     if (token) {
       setUser({ authenticated: true });
     }
     setLoading(false);
+    */
   }, []);
 
   // ✅ LOGIN

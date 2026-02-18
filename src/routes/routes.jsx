@@ -14,7 +14,7 @@ export const routes = [
   // 🚀 ALWAYS send "/" to login
   {
     path: "/",
-    element: <Navigate to="/login" replace />,
+    element: <Navigate to="/dashboard" replace />,
   },
 
   // =========================
