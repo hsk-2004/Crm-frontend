@@ -288,6 +288,8 @@ const STYLES = `
   .navbar-logo__rule { display: none; }
   .navbar-user__name { display: none; }
   .navbar-sep        { display: none; }
+  .navbar-logout__label { display: none; }
+  .navbar-logout { padding: 9px; } /* Icon only padding */
   .navbar-container  { padding: 0 16px; }
 }
 `;
