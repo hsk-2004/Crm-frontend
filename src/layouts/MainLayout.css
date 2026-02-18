@@ -1,0 +1,27 @@
+.main-layout {
+  display: flex;
+  flex-direction: column;
+  height: 100vh;
+  background: #09090e;
+}
+
+.layout-container {
+  display: flex;
+  flex: 1;
+  overflow: hidden;
+  background: #09090e;
+}
+
+.layout-content {
+  flex: 1;
+  overflow-y: auto;
+  overflow-x: hidden;
+  background: #09090e;
+  padding: 0;
+}
+
+@media (max-width: 768px) {
+  .layout-container {
+    flex-direction: column;
+  }
+}
