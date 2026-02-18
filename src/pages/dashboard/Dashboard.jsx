@@ -1,5 +1,7 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useCallback } from 'react';
 import { motion } from 'framer-motion';
+import { leadsApi } from '../../api/leads';
+import { clientsApi } from '../../api/clients';
 
 // ─── Animation Variants ───────────────────────────────────────────────────────
 
@@ -205,47 +207,100 @@ function QuickAction({ label, icon, onClick, variant = 'ghost' }) {
  *   userName:  string   (e.g. from useAuth)
  *   dateLabel: string   (e.g. "Feb 2026")
  */
-export function Dashboard({
-  stats = {},
-  activity = [],
-  pipeline = [],
-  loading = false,
-  onAddLead,
-  onExport,
-  userName,
-  dateLabel,
-}) {
-  // Derive total pipeline count
+export function Dashboard() {
+  const [leads, setLeads] = useState([]);
+  const [clients, setClients] = useState([]);
+  const [loading, setLoading] = useState(true);
+
+  const fetchData = useCallback(async () => {
+    setLoading(true);
+    try {
+      const [leadsRes, clientsRes] = await Promise.all([
+        leadsApi.getLeads(),
+        clientsApi.getClients(),
+      ]);
+      setLeads(leadsRes.data || []);
+      setClients(clientsRes.data || []);
+    } catch {
+      // silently fail — empty state will show
+    } finally {
+      setLoading(false);
+    }
+  }, []);
+
+  useEffect(() => { fetchData(); }, [fetchData]);
+
+  // ── Computed stats ──
+  const now = new Date();
+  const thisMonth = now.getMonth();
+  const thisYear = now.getFullYear();
+
+  const totalLeads = leads.length;
+  const activeClients = clients.filter(c => c.health === 'active').length;
+  const newLeads = leads.filter(l => {
+    const d = new Date(l.date || l.date_added);
+    return d.getMonth() === thisMonth && d.getFullYear() === thisYear;
+  }).length;
+  const convertedLeads = leads.filter(l => l.status === 'converted').length;
+
+  const stats = {
+    totalLeads,
+    activeClients,
+    newLeads,
+    closedLeads: convertedLeads,
+    leadsDelta: 0,
+    clientsDelta: 0,
+    newLeadsDelta: 0,
+    closedLeadsDelta: 0,
+  };
+
+  // ── Activity feed: last 8 leads + clients merged by date ──
+  const leadActivity = leads.slice(0, 5).map(l => ({
+    id: `lead-${l.id}`,
+    name: l.name || 'Unknown',
+    action: `added as a lead${l.company ? ` from ${l.company}` : ''}`,
+    time: l.date || l.date_added || '',
+    type: 'lead',
+  }));
+  const clientActivity = clients.slice(0, 3).map(c => ({
+    id: `client-${c.id}`,
+    name: c.name || c.company || 'Unknown',
+    action: `converted to client`,
+    time: c.since || '',
+    type: 'client',
+  }));
+  const activity = [...leadActivity, ...clientActivity]
+    .sort((a, b) => (b.time > a.time ? 1 : -1))
+    .slice(0, 8);
+
+  // ── Pipeline bars: lead status breakdown ──
+  const STATUS_COLORS = {
+    new: '#b8965a',
+    contacted: '#7c9cbf',
+    converted: '#6ab5a0',
+    lost: '#c07070',
+  };
+  const statusCounts = leads.reduce((acc, l) => {
+    const s = l.status || 'new';
+    acc[s] = (acc[s] || 0) + 1;
+    return acc;
+  }, {});
+  const pipeline = Object.entries(statusCounts).map(([status, count]) => ({
+    label: status.charAt(0).toUpperCase() + status.slice(1),
+    value: count,
+    color: STATUS_COLORS[status] || '#888',
+  }));
+
+  // ── Derived pipeline total ──
   const pipelineTotal = pipeline.reduce((sum, s) => sum + (s.value || 0), 0);
   const pipelineMax = pipelineTotal || 1;
 
   const statCards = [
-    {
-      label: 'Total Leads',
-      value: stats.totalLeads,
-      delta: stats.leadsDelta ?? 0,
-      icon: <LeadIcon />,
-    },
-    {
-      label: 'Active Clients',
-      value: stats.activeClients,
-      delta: stats.clientsDelta ?? 0,
-      icon: <ClientIcon />,
-    },
-    {
-      label: 'New Leads (This Month)',
-      value: stats.newLeads,
-      delta: stats.newLeadsDelta ?? 0,
-      icon: <LeadIcon />,
-    },
-    {
-      label: 'Closed Leads',
-      value: stats.closedLeads,
-      delta: stats.closedLeadsDelta ?? 0,
-      icon: <ClientIcon />,
-    },
+    { label: 'Total Leads', value: stats.totalLeads, delta: stats.leadsDelta ?? 0, icon: <LeadIcon /> },
+    { label: 'Active Clients', value: stats.activeClients, delta: stats.clientsDelta ?? 0, icon: <ClientIcon /> },
+    { label: 'New Leads (This Month)', value: stats.newLeads, delta: stats.newLeadsDelta ?? 0, icon: <LeadIcon /> },
+    { label: 'Converted Leads', value: stats.closedLeads, delta: stats.closedLeadsDelta ?? 0, icon: <ClientIcon /> },
   ];
-
 
   // Current greeting
   const hour = new Date().getHours();
@@ -272,10 +327,10 @@ export function Dashboard({
           >
             <div className="dash__header-left">
               <motion.span variants={itemVariants} className="dash__eyebrow">
-                {dateLabel || new Date().toLocaleDateString('en-US', { month: 'long', year: 'numeric' })}
+                {now.toLocaleDateString('en-US', { month: 'long', year: 'numeric' })}
               </motion.span>
               <motion.h1 variants={itemVariants} className="dash__title">
-                {greeting}{userName ? `, ${userName.split(' ')[0]}` : ''}
+                {greeting}
               </motion.h1>
               <motion.p variants={itemVariants} className="dash__subtitle">
                 Here's what's happening across your workspace today.
@@ -285,16 +340,10 @@ export function Dashboard({
 
             <motion.div variants={itemVariants} className="dash__header-actions">
               <QuickAction
-                label="Export"
+                label="Refresh"
                 variant="ghost"
-                onClick={onExport}
+                onClick={fetchData}
                 icon={<ExportIcon />}
-              />
-              <QuickAction
-                label="Add Lead"
-                variant="primary"
-                onClick={onAddLead}
-                icon={<PlusIcon />}
               />
             </motion.div>
           </motion.div>
@@ -327,11 +376,8 @@ export function Dashboard({
               <div className="panel__head">
                 <div>
                   <span className="panel__label">Recent Activity</span>
-                  <p className="panel__sub">Latest updates across your CRM</p>
+                  <p className="panel__sub">Latest leads &amp; clients added</p>
                 </div>
-                {!loading && activity.length > 0 && (
-                  <button className="panel__see-all">View all →</button>
-                )}
               </div>
 
               <div className="panel__body">
@@ -360,13 +406,12 @@ export function Dashboard({
                 <div>
                   <span className="panel__label">Lead Overview</span>
                   <p className="panel__sub">Current lead status summary</p>
-
                 </div>
               </div>
 
               <div className="panel__body">
                 {loading
-                  ? Array.from({ length: 5 }).map((_, i) => (
+                  ? Array.from({ length: 4 }).map((_, i) => (
                     <div key={i} className="pipeline-bar">
                       <div className="pipeline-bar__meta">
                         <Skeleton w="80px" h="11px" />
@@ -492,6 +537,18 @@ const STYLES = `
   --down: rgba(220,100,100,0.85);
   --radius: 3px;
   --t: 200ms cubic-bezier(0.4,0,0.2,1);
+}
+
+[data-theme="light"] {
+  --bg: #f5f3ef;
+  --surface: rgba(0,0,0,0.04);
+  --surface-hover: rgba(0,0,0,0.07);
+  --border: rgba(0,0,0,0.10);
+  --border-gold: rgba(184,150,90,0.30);
+  --text-0: #0a0a0f;
+  --text-1: rgba(10,10,15,0.85);
+  --text-2: rgba(10,10,15,0.60);
+  --text-3: rgba(10,10,15,0.40);
 }
 
 /* ── Skeleton shimmer ── */

@@ -6,15 +6,18 @@ import './index.css';
 import App from './App.jsx';
 import { AuthProvider } from './context/AuthContext';
 import { OrganizationProvider } from './context/OrganizationContext';
+import { ThemeProvider } from './context/ThemeContext';
 
 createRoot(document.getElementById('root')).render(
   <StrictMode>
     <BrowserRouter>
-      <AuthProvider>
-        <OrganizationProvider>
-          <App />
-        </OrganizationProvider>
-      </AuthProvider>
+      <ThemeProvider>
+        <AuthProvider>
+          <OrganizationProvider>
+            <App />
+          </OrganizationProvider>
+        </AuthProvider>
+      </ThemeProvider>
     </BrowserRouter>
   </StrictMode>
 );

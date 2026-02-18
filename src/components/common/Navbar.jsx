@@ -26,18 +26,34 @@ const STYLES = `
   --t:             200ms cubic-bezier(0.4,0,0.2,1);
 }
 
+[data-theme="light"] {
+  --bg:            #f5f3ef;
+  --surface:       rgba(0,0,0,0.04);
+  --surface-hover: rgba(0,0,0,0.07);
+  --border:        rgba(0,0,0,0.10);
+  --border-gold:   rgba(184,150,90,0.30);
+  --text-0:        #0a0a0f;
+  --text-1:        rgba(10,10,15,0.85);
+  --text-2:        rgba(10,10,15,0.60);
+  --text-3:        rgba(10,10,15,0.40);
+}
+
 /* ── Navbar shell ── */
 .navbar {
   position: sticky;
   top: 0;
   z-index: 100;
   height: var(--nav-h);
-  background: rgba(9,9,14,0.55);
+  background: var(--bg);
   backdrop-filter: blur(20px) saturate(140%);
   -webkit-backdrop-filter: blur(20px) saturate(140%);
   border-bottom: 1px solid var(--border);
   font-family: 'DM Sans', sans-serif;
   transition: background var(--t), box-shadow var(--t);
+}
+
+[data-theme="light"] .navbar {
+  background: rgba(245,243,239,0.92);
 }
 
 /* topline shimmer — identical to .stat-card__topline */
@@ -373,7 +389,7 @@ export function Navbar() {
                 >
                   {loggingOut
                     ? <span className="navbar-logout__spinner" />
-                    : <><SignOutIcon /> Sign out</>
+                    : <><SignOutIcon /> <span className="navbar-logout__label">Sign out</span></>
                   }
                 </button>
               </>

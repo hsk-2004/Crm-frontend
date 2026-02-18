@@ -1,4 +1,6 @@
 import React, { useState, useEffect } from 'react';
+import { useTheme } from '../../context/ThemeContext';
+import apiClient from '../../api/axiosConfig';
 
 const styles = `
   @import url('https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,300;0,400;0,600;1,300;1,400&family=DM+Sans:wght@300;400;500&display=swap');
@@ -241,6 +243,11 @@ const styles = `
     grid-template-columns: 1fr 1fr;
     gap: 16px;
     margin-bottom: 20px;
+  }
+
+  @media (max-width: 600px) {
+    .settings-field-group { grid-template-columns: 1fr; }
+    .settings-container { padding-bottom: 80px; }
   }
 
   .settings-field {
@@ -754,33 +761,60 @@ const styles = `
 `;
 
 export function Settings() {
-  const [theme, setTheme] = useState(() => {
-    return localStorage.getItem('app-theme') || 'dark';
-  });
+  const { theme, setTheme } = useTheme();
   const [activeTab, setActiveTab] = useState('profile');
   const [notificationsEnabled, setNotificationsEnabled] = useState(true);
   const [emailDigest, setEmailDigest] = useState('weekly');
   const [formData, setFormData] = useState({
-    first_name: 'John',
-    last_name: 'Doe',
-    email: 'john.doe@example.com',
-    company: 'Acme Corporation',
+    first_name: '',
+    last_name: '',
+    email: '',
+    phone_number: '',
+    password: '',
   });
   const [saved, setSaved] = useState(false);
+  const [saveError, setSaveError] = useState('');
+  const [profileLoading, setProfileLoading] = useState(true);
 
+  // ThemeContext already handles localStorage + data-theme attribute
+
+  // Fetch real profile on mount
   useEffect(() => {
-    localStorage.setItem('app-theme', theme);
-    document.documentElement.setAttribute('data-theme', theme);
-  }, [theme]);
+    apiClient.get('profile/')
+      .then(res => {
+        const { first_name, last_name, email, phone_number } = res.data;
+        setFormData({ first_name: first_name || '', last_name: last_name || '', email: email || '', phone_number: phone_number || '', password: '' });
+      })
+      .catch(() => { })
+      .finally(() => setProfileLoading(false));
+  }, []);
 
   const handleFormChange = (e) => {
     const { name, value } = e.target;
     setFormData(prev => ({ ...prev, [name]: value }));
   };
 
-  const handleSaveProfile = () => {
-    setSaved(true);
-    setTimeout(() => setSaved(false), 3000);
+  const handleSaveProfile = async () => {
+    setSaveError('');
+    try {
+      const payload = {
+        first_name: formData.first_name,
+        last_name: formData.last_name,
+        email: formData.email,
+        phone_number: formData.phone_number,
+      };
+      if (formData.password) payload.password = formData.password;
+      await apiClient.patch('profile/', payload);
+      setSaved(true);
+      setFormData(prev => ({ ...prev, password: '' }));
+      setTimeout(() => setSaved(false), 3000);
+    } catch (err) {
+      const data = err.response?.data;
+      const msg = data
+        ? Object.values(data).flat().join(' ')
+        : 'Failed to save changes. Please try again.';
+      setSaveError(msg);
+    }
   };
 
   const toggleTheme = (newTheme) => {
@@ -847,7 +881,9 @@ export function Settings() {
                 <div className="card-accent card-accent--bottom" />
 
                 <div className="profile-header-block">
-                  <div className="avatar-large">{formData.first_name[0]}{formData.last_name[0]}</div>
+                  <div className="avatar-large">
+                    {profileLoading ? '…' : `${formData.first_name?.[0] || ''}${formData.last_name?.[0] || ''}`}
+                  </div>
                   <div className="profile-info">
                     <h2 className="profile-name">{formData.first_name} {formData.last_name}</h2>
                     <p className="profile-email">{formData.email}</p>
@@ -863,6 +899,11 @@ export function Settings() {
                       <polyline points="20 6 9 17 4 12" />
                     </svg>
                     Changes saved successfully
+                  </div>
+                )}
+                {saveError && (
+                  <div style={{ color: '#c07070', fontSize: 13, marginBottom: 12, padding: '10px 14px', background: 'rgba(192,112,112,0.08)', borderRadius: 3, border: '1px solid rgba(192,112,112,0.2)' }}>
+                    {saveError}
                   </div>
                 )}
 
@@ -904,14 +945,14 @@ export function Settings() {
                 </div>
 
                 <div className="settings-field">
-                  <label className="field-label">Company</label>
+                  <label className="field-label">Phone Number</label>
                   <input
-                    type="text"
-                    name="company"
+                    type="tel"
+                    name="phone_number"
                     className="field-input"
-                    value={formData.company}
+                    value={formData.phone_number}
                     onChange={handleFormChange}
-                    placeholder="Your company name"
+                    placeholder="+1 555 000 0000"
                   />
                 </div>
 
@@ -919,7 +960,10 @@ export function Settings() {
                   <label className="field-label">Password</label>
                   <input
                     type="password"
+                    name="password"
                     className="field-input"
+                    value={formData.password}
+                    onChange={handleFormChange}
                     placeholder="••••••••"
                   />
                   <p className="field-hint">Leave blank to keep current password</p>
@@ -1032,74 +1076,68 @@ export function Settings() {
                 <div className="card-accent card-accent--bottom" />
 
                 <div className="about-content">
+
+                  {/* Developer block */}
+                  <div className="about-block" style={{ display: 'flex', alignItems: 'center', gap: 20 }}>
+                    <div className="avatar-large" style={{ width: 64, height: 64, fontSize: 26, flexShrink: 0 }}>HS</div>
+                    <div>
+                      <h2 className="about-title" style={{ marginBottom: 4 }}>Harman Singh</h2>
+                      <p className="about-text" style={{ margin: 0 }}>
+                        Full-Stack Developer · Built this CRM from scratch as a personal project to demonstrate
+                        end-to-end product development — from database design to polished UI.
+                      </p>
+                    </div>
+                  </div>
+
+                  <div className="settings-divider" />
+
+                  {/* Project description */}
                   <div className="about-block">
-                    <h2 className="about-title">Professional CRM Solution</h2>
+                    <h3 className="features-title" style={{ marginBottom: 10 }}>About This Project</h3>
                     <p className="about-text">
-                      Our CRM platform is designed to streamline your sales operations and enhance customer relationships.
-                      Built with modern technology and user-centric design principles, we provide powerful tools to help you succeed
-                      in today's competitive market.
+                      A modern, full-featured Customer Relationship Management system with lead tracking,
+                      client management, a live dashboard, theme switching, and JWT-secured authentication.
+                      Every pixel and every endpoint was crafted by Harman Singh.
                     </p>
                   </div>
 
                   <div className="settings-divider" />
 
-                  <div className="about-grid">
-                    <div className="about-item">
-                      <div className="about-icon">
-                        <svg width="28" height="28" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.5">
-                          <path d="M12 2L15.09 8.26H22L17.45 12.5L20.09 18.74H12L7.45 12.5L10.09 8.26H2L7.45 2H12Z" strokeLinecap="round" strokeLinejoin="round" />
-                        </svg>
-                      </div>
-                      <h4 className="about-item-title">Version</h4>
-                      <p className="about-item-text">2.1.0</p>
-                    </div>
-
-                    <div className="about-item">
-                      <div className="about-icon">
-                        <svg width="28" height="28" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.5">
-                          <path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2" strokeLinecap="round" strokeLinejoin="round" />
-                          <circle cx="9" cy="7" r="4" strokeLinecap="round" strokeLinejoin="round" />
-                          <path d="M23 21v-2a4 4 0 0 0-3-3.87" strokeLinecap="round" strokeLinejoin="round" />
-                          <path d="M16 3.13a4 4 0 0 1 0 7.75" strokeLinecap="round" strokeLinejoin="round" />
-                        </svg>
-                      </div>
-                      <h4 className="about-item-title">Users</h4>
-                      <p className="about-item-text">50K+</p>
-                    </div>
-
-                    <div className="about-item">
-                      <div className="about-icon">
-                        <svg width="28" height="28" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.5">
-                          <path d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2z" strokeLinecap="round" strokeLinejoin="round" />
-                          <polyline points="12 6 12 12 16 14" strokeLinecap="round" strokeLinejoin="round" />
-                        </svg>
-                      </div>
-                      <h4 className="about-item-title">Uptime</h4>
-                      <p className="about-item-text">99.9%</p>
-                    </div>
-
-                    <div className="about-item">
-                      <div className="about-icon">
-                        <svg width="28" height="28" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.5">
-                          <path d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z" strokeLinecap="round" strokeLinejoin="round" />
-                        </svg>
-                      </div>
-                      <h4 className="about-item-title">Status</h4>
-                      <p className="about-item-text">Operational</p>
+                  {/* Tech stack */}
+                  <div className="about-block">
+                    <h3 className="features-title" style={{ marginBottom: 14 }}>Tech Stack</h3>
+                    <div className="about-grid" style={{ gridTemplateColumns: 'repeat(auto-fill, minmax(140px, 1fr))', gap: 12 }}>
+                      {[
+                        { icon: '⚛️', name: 'React 18', desc: 'Frontend UI' },
+                        { icon: '🎞️', name: 'Framer Motion', desc: 'Animations' },
+                        { icon: '⚡', name: 'Vite', desc: 'Build tool' },
+                        { icon: '🐍', name: 'Django 5', desc: 'Backend API' },
+                        { icon: '🔌', name: 'Django REST', desc: 'REST framework' },
+                        { icon: '🔐', name: 'JWT Auth', desc: 'SimpleJWT' },
+                        { icon: '🗄️', name: 'SQLite', desc: 'Database' },
+                        { icon: '🌐', name: 'Axios', desc: 'HTTP client' },
+                      ].map(t => (
+                        <div key={t.name} className="about-item" style={{ padding: '14px 16px' }}>
+                          <div style={{ fontSize: 22, marginBottom: 6 }}>{t.icon}</div>
+                          <h4 className="about-item-title">{t.name}</h4>
+                          <p className="about-item-text">{t.desc}</p>
+                        </div>
+                      ))}
                     </div>
                   </div>
 
                   <div className="settings-divider" />
 
+                  {/* Features */}
                   <div className="about-features">
                     <h3 className="features-title">Key Features</h3>
                     <ul className="features-list">
-                      <li className="feature-item">Advanced lead management and tracking</li>
-                      <li className="feature-item">Real-time sales pipeline visibility</li>
-                      <li className="feature-item">Automated workflow and task management</li>
-                      <li className="feature-item">Comprehensive reporting and analytics</li>
-                      <li className="feature-item">Seamless team collaboration tools</li>
-                      <li className="feature-item">Mobile-friendly responsive design</li>
+                      <li className="feature-item">Lead management — add, edit, delete, convert to client</li>
+                      <li className="feature-item">Client management with health tracking</li>
+                      <li className="feature-item">Live dashboard with real stats &amp; pipeline overview</li>
+                      <li className="feature-item">Dark / Light theme with persistent preference</li>
+                      <li className="feature-item">JWT authentication with auto token refresh</li>
+                      <li className="feature-item">Fully responsive, mobile-friendly design</li>
                     </ul>
                   </div>
 
@@ -1107,21 +1145,19 @@ export function Settings() {
 
                   <div className="about-footer">
                     <p className="about-footer-text">
-                      <span className="footer-accent">Developed with care</span> to help you build meaningful customer relationships
+                      <span className="footer-accent">Designed &amp; developed by Harman Singh</span> · v1.0.0 · 2026
                     </p>
                     <div className="about-links">
-                      <a href="#" className="about-link">Documentation</a>
+                      <a href="https://github.com/hsk-2004" target="_blank" rel="noreferrer" className="about-link">GitHub</a>
                       <span className="link-separator">•</span>
-                      <a href="#" className="about-link">Support</a>
-                      <span className="link-separator">•</span>
-                      <a href="#" className="about-link">Privacy Policy</a>
-                      <span className="link-separator">•</span>
-                      <a href="#" className="about-link">Terms of Service</a>
+                      <a href="https://github.com/hsk-2004/Crm-frontend" target="_blank" rel="noreferrer" className="about-link">Source Code</a>
                     </div>
                   </div>
+
                 </div>
               </div>
             )}
+
           </div>
         </div>
       </div>
