@@ -411,12 +411,12 @@ export function Clients() {
                             </div>
                           </div>
                         </td>
-                        <td className="c-td"><Skeleton w="80px" h="22px" radius="2px" /></td>
-                        <td className="c-td"><Skeleton w="72px" h="11px" /></td>
-                        <td className="c-td"><Skeleton w="56px" h="11px" /></td>
-                        <td className="c-td"><Skeleton w="48px" h="11px" /></td>
-                        <td className="c-td"><Skeleton w="60px" h="11px" /></td>
-                        <td className="c-td"><Skeleton w="72px" h="11px" /></td>
+                        <td className="c-td" data-label="Health"><Skeleton w="80px" h="22px" radius="2px" /></td>
+                        <td className="c-td" data-label="Industry"><Skeleton w="72px" h="11px" /></td>
+                        <td className="c-td" data-label="Revenue"><Skeleton w="56px" h="11px" /></td>
+                        <td className="c-td" data-label="MRR"><Skeleton w="48px" h="11px" /></td>
+                        <td className="c-td" data-label="Assigned"><Skeleton w="60px" h="11px" /></td>
+                        <td className="c-td" data-label="Since"><Skeleton w="72px" h="11px" /></td>
                         <td className="c-td" />
                       </tr>
                     ))
@@ -451,25 +451,25 @@ export function Clients() {
                             </div>
                           </td>
 
-                          <td className="c-td"><HealthBadge health={client.health} /></td>
+                          <td className="c-td" data-label="Health"><HealthBadge health={client.health} /></td>
 
-                          <td className="c-td">
+                          <td className="c-td" data-label="Industry">
                             <span className="c-industry">{client.industry || '—'}</span>
                           </td>
 
-                          <td className="c-td c-td--num">
+                          <td className="c-td c-td--num" data-label="Revenue">
                             <span className="c-revenue">{fmtRevenue(client.revenue)}</span>
                           </td>
 
-                          <td className="c-td c-td--num">
+                          <td className="c-td c-td--num" data-label="MRR">
                             <span className="c-mrr">{client.mrr ? fmtRevenue(client.mrr) : '—'}</span>
                           </td>
 
-                          <td className="c-td">
+                          <td className="c-td" data-label="Assigned">
                             <span className="c-assigned">{client.assigned || '—'}</span>
                           </td>
 
-                          <td className="c-td">
+                          <td className="c-td" data-label="Since">
                             <span className="c-since">{client.since || '—'}</span>
                           </td>
 
@@ -957,6 +957,70 @@ const STYLES = `
   font-family: 'DM Mono', monospace; font-size: 10px;
   letter-spacing: 0.22em; text-transform: uppercase;
   color: var(--text-3); user-select: none;
+}
+
+/* ── Responsive Table ── */
+@media (max-width: 768px) {
+  .c-table-wrap { overflow-x: visible; }
+  .c-table { display: block; }
+  .c-table thead { display: none; }
+  .c-table tbody { display: block; }
+  .c-tr {
+    display: block;
+    position: relative;
+    background: rgba(255,255,255,0.02);
+    border: 1px solid var(--border);
+    border-radius: var(--radius);
+    margin-bottom: 16px;
+    padding: 16px;
+  }
+  .c-tr:hover { background: rgba(255,255,255,0.04); }
+  
+  .c-td {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 6px 0;
+    border: none;
+    text-align: right;
+  }
+  .c-td::before {
+    content: attr(data-label);
+    font-family: 'DM Mono', monospace;
+    font-size: 10px;
+    color: var(--text-3);
+    text-transform: uppercase;
+    letter-spacing: 0.1em;
+    margin-right: 12px;
+    text-align: left;
+    flex-shrink: 0;
+  }
+  
+  /* First cell (Client info) - full width and distinct */
+  .c-td:first-child {
+    display: block;
+    text-align: left;
+    padding-bottom: 12px;
+    border-bottom: 1px solid var(--border);
+    margin-bottom: 8px;
+    padding-right: 32px; /* Space for action button */
+  }
+  .c-td:first-child::before { display: none; }
+  
+  /* Actions - absolute positioned top right */
+  .c-td--actions {
+    position: absolute;
+    top: 16px;
+    right: 16px;
+    padding: 0;
+    width: auto;
+    justify-content: flex-end;
+  }
+  .c-td--actions::before { display: none; }
+  
+  /* Adjust inner alignments */
+  .c-client-cell { gap: 12px; }
+  .c-revenue, .c-mrr { font-size: 14px; }
 }
 
 @media (max-width: 700px) {

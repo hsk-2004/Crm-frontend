@@ -512,11 +512,11 @@ export function Leads() {
                             </div>
                           </div>
                         </td>
-                        <td className="l-td"><Skeleton w="80px" h="22px" radius="2px" /></td>
-                        <td className="l-td"><Skeleton w="64px" h="11px" /></td>
-                        <td className="l-td"><Skeleton w="52px" h="11px" /></td>
-                        <td className="l-td"><Skeleton w="56px" h="11px" /></td>
-                        <td className="l-td"><Skeleton w="76px" h="11px" /></td>
+                        <td className="l-td" data-label="Status"><Skeleton w="80px" h="22px" radius="2px" /></td>
+                        <td className="l-td" data-label="Source"><Skeleton w="64px" h="11px" /></td>
+                        <td className="l-td" data-label="Deal Value"><Skeleton w="52px" h="11px" /></td>
+                        <td className="l-td" data-label="Assigned"><Skeleton w="56px" h="11px" /></td>
+                        <td className="l-td" data-label="Date Added"><Skeleton w="76px" h="11px" /></td>
                         <td className="l-td" />
                       </tr>
                     ))
@@ -549,17 +549,17 @@ export function Leads() {
                               </div>
                             </div>
                           </td>
-                          <td className="l-td"><StatusBadge status={lead.status} /></td>
-                          <td className="l-td">
+                          <td className="l-td" data-label="Status"><StatusBadge status={lead.status} /></td>
+                          <td className="l-td" data-label="Source">
                             <span className="l-source">{lead.source || '—'}</span>
                           </td>
-                          <td className="l-td l-td--num">
+                          <td className="l-td l-td--num" data-label="Deal Value">
                             <span className="l-value">{fmtValue(lead.value)}</span>
                           </td>
-                          <td className="l-td">
+                          <td className="l-td" data-label="Assigned">
                             <span className="l-assigned">{lead.assigned || '—'}</span>
                           </td>
-                          <td className="l-td">
+                          <td className="l-td" data-label="Date Added">
                             <span className="l-date">{lead.date || '—'}</span>
                           </td>
                           <td className="l-td l-td--actions" onClick={e => e.stopPropagation()}>
@@ -1233,6 +1233,70 @@ const STYLES = `
   .l-toolbar { flex-direction: column; align-items: stretch; }
   .l-toolbar__right { margin-left: 0; }
   .l-search { width: 100%; }
+}
+
+/* ── Responsive Table ── */
+@media (max-width: 768px) {
+  .l-table-wrap { overflow-x: visible; }
+  .l-table { display: block; }
+  .l-table thead { display: none; }
+  .l-table tbody { display: block; }
+  .l-tr {
+    display: block;
+    position: relative;
+    background: rgba(255,255,255,0.02);
+    border: 1px solid var(--border);
+    border-radius: var(--radius);
+    margin-bottom: 16px;
+    padding: 16px;
+  }
+  .l-tr:hover { background: rgba(255,255,255,0.04); }
+  
+  .l-td {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 6px 0;
+    border: none;
+    text-align: right;
+  }
+  .l-td::before {
+    content: attr(data-label);
+    font-family: 'DM Mono', monospace;
+    font-size: 10px;
+    color: var(--text-3);
+    text-transform: uppercase;
+    letter-spacing: 0.1em;
+    margin-right: 12px;
+    text-align: left;
+    flex-shrink: 0;
+  }
+  
+  /* First cell (Lead info) - full width and distinct */
+  .l-td:first-child {
+    display: block;
+    text-align: left;
+    padding-bottom: 12px;
+    border-bottom: 1px solid var(--border);
+    margin-bottom: 8px;
+    padding-right: 32px; /* Space for action button */
+  }
+  .l-td:first-child::before { display: none; }
+  
+  /* Actions - absolute positioned top right */
+  .l-td--actions {
+    position: absolute;
+    top: 16px;
+    right: 16px;
+    padding: 0;
+    width: auto;
+    justify-content: flex-end;
+  }
+  .l-td--actions::before { display: none; }
+  
+  /* Adjust inner alignments */
+  .l-lead-cell { gap: 12px; }
+  .l-value { font-size: 14px; }
 }
 
 /* ── Add Lead Modal ── */
