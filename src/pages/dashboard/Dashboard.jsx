@@ -3,7 +3,7 @@ import { motion } from 'framer-motion';
 import { leadsApi } from '../../api/leads';
 import { clientsApi } from '../../api/clients';
 
-// ─── Animation Variants ───────────────────────────────────────────────────────
+
 
 const containerVariants = {
   hidden: {},
@@ -26,7 +26,7 @@ const cardVariants = {
   },
 };
 
-// ─── Animated Number ──────────────────────────────────────────────────────────
+
 
 function AnimatedNumber({ target, prefix = '', suffix = '', duration = 1600 }) {
   const [current, setCurrent] = useState(0);
@@ -48,7 +48,7 @@ function AnimatedNumber({ target, prefix = '', suffix = '', duration = 1600 }) {
   return <span>{prefix}{current.toLocaleString()}{suffix}</span>;
 }
 
-// ─── Skeleton ─────────────────────────────────────────────────────────────────
+
 
 function Skeleton({ w = '100%', h = '14px', radius = '3px' }) {
   return (
@@ -56,7 +56,7 @@ function Skeleton({ w = '100%', h = '14px', radius = '3px' }) {
   );
 }
 
-// ─── Stat Card ────────────────────────────────────────────────────────────────
+
 
 function StatCard({ label, value, delta, icon, prefix = '', suffix = '', loading }) {
   const [hovered, setHovered] = useState(false);
@@ -69,12 +69,12 @@ function StatCard({ label, value, delta, icon, prefix = '', suffix = '', loading
       onMouseEnter={() => setHovered(true)}
       onMouseLeave={() => setHovered(false)}
     >
-      {/* Top shimmer line */}
+      {}
       <div className="stat-card__topline" />
-      {/* Corner tick */}
+      {}
       <div className="stat-card__corner" />
 
-      {/* Header row */}
+      {}
       <div className="stat-card__header">
         <span className="stat-card__label">
           {loading ? <Skeleton w="80px" h="10px" /> : label}
@@ -82,7 +82,7 @@ function StatCard({ label, value, delta, icon, prefix = '', suffix = '', loading
         <div className="stat-card__icon">{icon}</div>
       </div>
 
-      {/* Value */}
+      {}
       <div className="stat-card__value">
         {loading
           ? <Skeleton w="100px" h="40px" radius="2px" />
@@ -90,7 +90,7 @@ function StatCard({ label, value, delta, icon, prefix = '', suffix = '', loading
         }
       </div>
 
-      {/* Delta */}
+      {}
       <div className="stat-card__footer">
         {loading ? (
           <Skeleton w="100px" h="11px" />
@@ -107,7 +107,7 @@ function StatCard({ label, value, delta, icon, prefix = '', suffix = '', loading
   );
 }
 
-// ─── Activity Row ─────────────────────────────────────────────────────────────
+
 
 const TYPE_CONFIG = {
   lead: { color: '#b8965a', label: 'LEAD' },
@@ -152,7 +152,7 @@ function ActivitySkeleton() {
   );
 }
 
-// ─── Pipeline Bar ─────────────────────────────────────────────────────────────
+
 
 function PipelineBar({ label, value, max, color, index, loading }) {
   const pct = max > 0 ? Math.round((value / max) * 100) : 0;
@@ -180,7 +180,7 @@ function PipelineBar({ label, value, max, color, index, loading }) {
   );
 }
 
-// ─── Quick Action Button ──────────────────────────────────────────────────────
+
 
 function QuickAction({ label, icon, onClick, variant = 'ghost' }) {
   return (
@@ -191,22 +191,10 @@ function QuickAction({ label, icon, onClick, variant = 'ghost' }) {
   );
 }
 
-// ─── Dashboard ────────────────────────────────────────────────────────────────
 
-/**
- * Dashboard component.
- *
- * Props (all optional — wire up to your API):
- *   stats:    { totalLeads, activeClients, teamMembers, conversions,
- *               leadsDelta, clientsDelta, teamDelta, conversionsDelta }
- *   activity: Array<{ id, name, action, time, type }>
- *   pipeline: Array<{ label, value, color }>
- *   loading:  boolean
- *   onAddLead: () => void
- *   onExport:  () => void
- *   userName:  string   (e.g. from useAuth)
- *   dateLabel: string   (e.g. "Feb 2026")
- */
+
+
+
 export function Dashboard() {
   const [leads, setLeads] = useState([]);
   const [clients, setClients] = useState([]);
@@ -222,7 +210,7 @@ export function Dashboard() {
       setLeads(leadsRes.data || []);
       setClients(clientsRes.data || []);
     } catch {
-      // silently fail — empty state will show
+      
     } finally {
       setLoading(false);
     }
@@ -230,7 +218,7 @@ export function Dashboard() {
 
   useEffect(() => { fetchData(); }, [fetchData]);
 
-  // ── Computed stats ──
+  
   const now = new Date();
   const thisMonth = now.getMonth();
   const thisYear = now.getFullYear();
@@ -254,7 +242,7 @@ export function Dashboard() {
     closedLeadsDelta: 0,
   };
 
-  // ── Activity feed: last 8 leads + clients merged by date ──
+  
   const leadActivity = leads.slice(0, 5).map(l => ({
     id: `lead-${l.id}`,
     name: l.name || 'Unknown',
@@ -273,7 +261,7 @@ export function Dashboard() {
     .sort((a, b) => (b.time > a.time ? 1 : -1))
     .slice(0, 8);
 
-  // ── Pipeline bars: lead status breakdown ──
+  
   const STATUS_COLORS = {
     new: '#b8965a',
     contacted: '#7c9cbf',
@@ -291,7 +279,7 @@ export function Dashboard() {
     color: STATUS_COLORS[status] || '#888',
   }));
 
-  // ── Derived pipeline total ──
+  
   const pipelineTotal = pipeline.reduce((sum, s) => sum + (s.value || 0), 0);
   const pipelineMax = pipelineTotal || 1;
 
@@ -302,7 +290,7 @@ export function Dashboard() {
     { label: 'Converted Leads', value: stats.closedLeads, delta: stats.closedLeadsDelta ?? 0, icon: <ClientIcon /> },
   ];
 
-  // Current greeting
+  
   const hour = new Date().getHours();
   const greeting = hour < 12 ? 'Good morning' : hour < 18 ? 'Good afternoon' : 'Good evening';
 
@@ -311,14 +299,14 @@ export function Dashboard() {
       <style>{STYLES}</style>
 
       <div className="dash">
-        {/* Ambient orbs */}
+        {}
         <div className="dash__orb dash__orb--1" />
         <div className="dash__orb dash__orb--2" />
         <div className="dash__grid-overlay" />
 
         <div className="dash__inner">
 
-          {/* ── Header ───────────────────────────────────── */}
+          {}
           <motion.div
             className="dash__header"
             variants={containerVariants}
@@ -348,7 +336,7 @@ export function Dashboard() {
             </motion.div>
           </motion.div>
 
-          {/* ── Stat Cards ───────────────────────────────── */}
+          {}
           <motion.div
             className="dash-grid"
             variants={containerVariants}
@@ -360,10 +348,10 @@ export function Dashboard() {
             ))}
           </motion.div>
 
-          {/* ── Bottom Row ───────────────────────────────── */}
+          {}
           <div className="dash-bottom">
 
-            {/* Activity Feed */}
+            {}
             <motion.div
               className="panel"
               initial={{ opacity: 0, y: 20 }}
@@ -392,7 +380,7 @@ export function Dashboard() {
               </div>
             </motion.div>
 
-            {/* Pipeline */}
+            {}
             <motion.div
               className="panel"
               initial={{ opacity: 0, y: 20 }}
@@ -428,7 +416,7 @@ export function Dashboard() {
                 }
               </div>
 
-              {/* Total */}
+              {}
               {!loading && pipeline.length > 0 && (
                 <div className="panel__total">
                   <span className="panel__total-label">Total Pipeline</span>
@@ -438,7 +426,7 @@ export function Dashboard() {
             </motion.div>
           </div>
 
-          {/* Footer */}
+          {}
           <motion.p
             className="dash__footer"
             initial={{ opacity: 0 }}
@@ -453,7 +441,7 @@ export function Dashboard() {
   );
 }
 
-// ─── Empty State ──────────────────────────────────────────────────────────────
+
 
 function EmptyState({ message }) {
   return (
@@ -468,7 +456,7 @@ function EmptyState({ message }) {
   );
 }
 
-// ─── Icons ────────────────────────────────────────────────────────────────────
+
 
 function LeadIcon() {
   return (
@@ -513,12 +501,12 @@ function PlusIcon() {
   );
 }
 
-// ─── Styles ───────────────────────────────────────────────────────────────────
+
 
 const STYLES = `
 @import url('https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,300;0,400;0,600;1,300;1,400&family=DM+Sans:wght@300;400;500;600&family=DM+Mono:wght@300;400&display=swap');
 
-/* ── Tokens ── */
+
 :root {
   --nav-h: 64px;
   --gold: #b8965a;
@@ -551,7 +539,7 @@ const STYLES = `
   --text-3: rgba(10,10,15,0.40);
 }
 
-/* ── Skeleton shimmer ── */
+
 @keyframes shimmer {
   0%   { background-position: -400px 0; }
   100% { background-position: 400px 0; }
@@ -565,7 +553,7 @@ const STYLES = `
 }
 .dash-skeleton--inline { width: 80px; height: 10px; display: inline-block; vertical-align: middle; }
 
-/* ── Shell ── */
+
 .dash {
   min-height: calc(100vh - var(--nav-h));
   background: var(--bg);
@@ -575,7 +563,7 @@ const STYLES = `
   overflow: hidden;
 }
 
-/* Ambient orbs */
+
 .dash__orb {
   position: fixed;
   border-radius: 50%;
@@ -594,7 +582,7 @@ const STYLES = `
   background: radial-gradient(circle, rgba(100,80,180,0.055) 0%, transparent 70%);
 }
 
-/* Subtle grid */
+
 .dash__grid-overlay {
   position: fixed; inset: 0; pointer-events: none; opacity: 0.012; z-index: 0;
   background-image:
@@ -603,13 +591,13 @@ const STYLES = `
   background-size: 64px 64px;
 }
 
-/* ── Inner ── */
+
 .dash__inner {
   position: relative; z-index: 1;
   max-width: 1380px; margin: 0 auto;
 }
 
-/* ── Header ── */
+
 .dash__header {
   display: flex;
   align-items: flex-end;
@@ -653,7 +641,7 @@ const STYLES = `
   display: flex; align-items: center; gap: 10px; flex-shrink: 0;
 }
 
-/* Quick actions */
+
 .quick-action {
   display: inline-flex; align-items: center; gap: 7px;
   padding: 9px 18px; border-radius: var(--radius);
@@ -687,7 +675,7 @@ const STYLES = `
 }
 .quick-action--primary:active { transform: translateY(0); }
 
-/* ── Stat grid ── */
+
 .dash-grid {
   display: grid;
   grid-template-columns: repeat(4, 1fr);
@@ -697,7 +685,7 @@ const STYLES = `
 @media (max-width: 1100px) { .dash-grid { grid-template-columns: repeat(2, 1fr); } }
 @media (max-width: 560px)  { .dash-grid { grid-template-columns: 1fr; } }
 
-/* ── Stat card ── */
+
 .stat-card {
   position: relative;
   background: var(--surface);
@@ -780,7 +768,7 @@ const STYLES = `
   font-weight: 300;
 }
 
-/* ── Bottom grid ── */
+
 .dash-bottom {
   display: grid;
   grid-template-columns: 1fr 320px;
@@ -788,7 +776,7 @@ const STYLES = `
 }
 @media (max-width: 1000px) { .dash-bottom { grid-template-columns: 1fr; } }
 
-/* ── Panel (shared card) ── */
+
 .panel {
   position: relative;
   background: var(--surface);
@@ -863,7 +851,7 @@ const STYLES = `
   color: var(--text-0); letter-spacing: -0.02em;
 }
 
-/* ── Activity row ── */
+
 .activity-row {
   display: flex; align-items: center; gap: 12px;
   padding: 12px 0;
@@ -897,7 +885,7 @@ const STYLES = `
   flex-shrink: 0;
 }
 
-/* ── Pipeline bar ── */
+
 .pipeline-bar { margin-bottom: 14px; }
 .pipeline-bar:last-child { margin-bottom: 0; }
 .pipeline-bar__meta {
@@ -918,7 +906,7 @@ const STYLES = `
 }
 .pipeline-bar__fill { height: 100%; border-radius: 2px; }
 
-/* ── Empty state ── */
+
 .empty-state {
   display: flex; flex-direction: column; align-items: center;
   padding: 32px 0; gap: 10px;
@@ -936,7 +924,7 @@ const STYLES = `
   font-family: 'DM Sans', sans-serif;
 }
 
-/* ── Footer ── */
+
 .dash__footer {
   text-align: center; margin-top: 44px;
   font-family: 'DM Mono', monospace;

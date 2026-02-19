@@ -1,10 +1,7 @@
 import { useState } from 'react';
 
-/**
- * Custom hook for managing form state
- * @param {Object} initialValues - Initial form values
- * @returns {Object} { values, errors, touched, handleChange, handleBlur, handleSubmit, resetForm }
- */
+
+
 export function useForm(initialValues, onSubmit) {
   const [values, setValues] = useState(initialValues);
   const [errors, setErrors] = useState({});

@@ -1,6 +1,6 @@
 @import url('https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,300;0,400;0,600;1,300;1,400&family=DM+Sans:wght@300;400;500&family=DM+Mono:wght@300;400&display=swap');
 
-/* ── Tokens ── */
+
 :root {
   --nav-h: 64px;
   --sidebar-w: 230px;
@@ -31,9 +31,8 @@
   --text-secondary: rgba(10, 10, 15, 0.75);
 }
 
-/* ══════════════════════════════════════════════
-   DESKTOP SIDEBAR
-══════════════════════════════════════════════ */
+
+
 .sidebar {
   width: var(--sidebar-w);
   flex-shrink: 0;
@@ -148,22 +147,21 @@
   box-shadow: 0 0 6px var(--accent-glow);
 }
 
-/* ══════════════════════════════════════════════
-   MOBILE BOTTOM TAB BAR
-══════════════════════════════════════════════ */
+
+
 .bottom-nav {
   display: none;
-  /* hidden on desktop */
+  
 }
 
 @media (max-width: 768px) {
 
-  /* Hide desktop sidebar */
+  
   .sidebar {
     display: none;
   }
 
-  /* Show bottom tab bar */
+  
   .bottom-nav {
     display: flex;
     position: fixed;

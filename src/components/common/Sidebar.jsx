@@ -54,7 +54,7 @@ export function Sidebar() {
 
   return (
     <>
-      {/* ── Desktop sidebar ── */}
+      {}
       <aside className="sidebar">
         <p className="sidebar-section-label">Navigation</p>
         <nav className="sidebar-nav">
@@ -75,7 +75,7 @@ export function Sidebar() {
         </nav>
       </aside>
 
-      {/* ── Mobile bottom tab bar ── */}
+      {}
       <nav className="bottom-nav">
         {menuItems.map((item) => {
           const isActive = pathname === item.href;

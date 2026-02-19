@@ -3,7 +3,7 @@ import { useNavigate, Link } from 'react-router-dom';
 import { motion, AnimatePresence } from 'framer-motion';
 import { useAuth } from '../../hooks/useAuth';
 
-// ─── Animation Variants ───────────────────────────────────────────────────────
+
 
 const containerVariants = {
   hidden: {},
@@ -22,7 +22,7 @@ const itemVariants = {
   },
 };
 
-// ─── Input Field ──────────────────────────────────────────────────────────────
+
 
 function InputField({ id, name, type = 'text', value, onChange, label, placeholder, required }) {
   const [focused, setFocused] = useState(false);
@@ -91,7 +91,7 @@ function InputField({ id, name, type = 'text', value, onChange, label, placehold
   );
 }
 
-// ─── Login Component ──────────────────────────────────────────────────────────
+
 
 export function Login() {
   const navigate = useNavigate();
@@ -101,7 +101,7 @@ export function Login() {
   const [loading, setLoading] = useState(false);
   const [success, setSuccess] = useState(false);
 
-  // Redirect if already logged in
+  
   React.useEffect(() => {
     if (user) {
       navigate('/dashboard', { replace: true });
@@ -166,7 +166,7 @@ export function Login() {
         overflow: 'hidden',
       }}>
 
-        {/* Ambient orbs */}
+        {}
         <div className="lp-orb-1" style={{
           position: 'absolute', top: '-160px', right: '-160px',
           width: '520px', height: '520px', borderRadius: '50%',
@@ -180,7 +180,7 @@ export function Login() {
           filter: 'blur(80px)', pointerEvents: 'none',
         }} />
 
-        {/* Grid overlay */}
+        {}
         <div style={{
           position: 'absolute', inset: 0, pointerEvents: 'none', opacity: 0.018,
           backgroundImage: `linear-gradient(rgba(184,150,90,1) 1px, transparent 1px),
@@ -188,7 +188,7 @@ export function Login() {
           backgroundSize: '64px 64px',
         }} />
 
-        {/* Panel */}
+        {}
         <motion.div
           initial={{ opacity: 0, scale: 0.96, y: 24 }}
           animate={{ opacity: 1, scale: 1, y: 0 }}
@@ -196,7 +196,7 @@ export function Login() {
           style={{ position: 'relative', zIndex: 10, width: '100%', maxWidth: '420px' }}
         >
 
-          {/* Header */}
+          {}
           <motion.div variants={containerVariants} initial="hidden" animate="visible" style={{ marginBottom: '32px' }}>
             <motion.span variants={itemVariants} style={{
               fontFamily: "'DM Mono', monospace",
@@ -242,7 +242,7 @@ export function Login() {
             </motion.p>
           </motion.div>
 
-          {/* Card */}
+          {}
           <motion.div
             initial={{ opacity: 0, y: 16 }}
             animate={{ opacity: 1, y: 0 }}
@@ -257,7 +257,7 @@ export function Login() {
               boxShadow: '0 32px 80px rgba(0,0,0,0.45), inset 0 0 0 1px rgba(184,150,90,0.06)',
             }}
           >
-            {/* Corner accents */}
+            {}
             <div style={{
               position: 'absolute', top: '-1px', right: '-1px',
               width: '24px', height: '24px',
@@ -273,7 +273,7 @@ export function Login() {
               pointerEvents: 'none',
             }} />
 
-            {/* Top shimmer line */}
+            {}
             <motion.div
               style={{
                 position: 'absolute', top: 0, left: 0, right: 0, height: '1px',
@@ -284,7 +284,7 @@ export function Login() {
               transition={{ delay: 0.4, duration: 0.9, ease: [0.22, 1, 0.36, 1] }}
             />
 
-            {/* Error banner */}
+            {}
             <AnimatePresence>
               {(error || authError) && (
                 <motion.div
@@ -320,7 +320,7 @@ export function Login() {
               )}
             </AnimatePresence>
 
-            {/* Form */}
+            {}
             <motion.form
               onSubmit={handleSubmit}
               variants={containerVariants}
@@ -338,7 +338,7 @@ export function Login() {
                   onChange={handleChange} label="Password" placeholder="••••••••" required />
               </motion.div>
 
-              {/* Forgot password */}
+              {}
               <motion.div variants={itemVariants} style={{ display: 'flex', justifyContent: 'flex-end', marginTop: '-8px' }}>
                 <Link to="/forgot-password" className="lp-forgot" style={{
                   fontFamily: "'DM Mono', monospace",
@@ -349,7 +349,7 @@ export function Login() {
                 </Link>
               </motion.div>
 
-              {/* Submit */}
+              {}
               <motion.div variants={itemVariants} style={{ paddingTop: '4px' }}>
                 <motion.button
                   type="submit"
@@ -424,7 +424,7 @@ export function Login() {
             </motion.form>
           </motion.div>
 
-          {/* Footer link */}
+          {}
           <motion.p
             initial={{ opacity: 0 }}
             animate={{ opacity: 1 }}
@@ -444,7 +444,7 @@ export function Login() {
           </motion.p>
         </motion.div>
 
-        {/* Footer stamp */}
+        
         <motion.p
           initial={{ opacity: 0 }}
           animate={{ opacity: 1 }}

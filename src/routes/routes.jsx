@@ -11,15 +11,15 @@ import { Register } from "../pages/auth/Register";
 import { ProtectedRoute } from "./ProtectedRoute";
 
 export const routes = [
-  // 🚀 ALWAYS send "/" to login
+  
   {
     path: "/",
     element: <Navigate to="/dashboard" replace />,
   },
 
-  // =========================
-  // Public Routes
-  // =========================
+  
+  
+  
   {
     path: "/login",
     element: <Login />,
@@ -29,9 +29,9 @@ export const routes = [
     element: <Register />,
   },
 
-  // =========================
-  // Protected Routes
-  // =========================
+  
+  
+  
   {
     path: "/dashboard",
     element: (
@@ -89,7 +89,7 @@ export const routes = [
     ],
   },
 
-  // Fallback
+  
   {
     path: "*",
     element: <Navigate to="/login" replace />,

@@ -776,9 +776,9 @@ export function Settings() {
   const [saveError, setSaveError] = useState('');
   const [profileLoading, setProfileLoading] = useState(true);
 
-  // ThemeContext already handles localStorage + data-theme attribute
+  
 
-  // Fetch real profile on mount
+  
   useEffect(() => {
     apiClient.get('profile/')
       .then(res => {
@@ -826,7 +826,7 @@ export function Settings() {
       <style>{styles}</style>
       <div className="settings-root">
         <div className="settings-container">
-          {/* Header */}
+          {}
           <div className="settings-header">
             <div>
               <h1 className="settings-title">
@@ -836,7 +836,7 @@ export function Settings() {
             </div>
           </div>
 
-          {/* Tabs Navigation */}
+          {}
           <div className="settings-tabs">
             <button
               className={`tab-button ${activeTab === 'profile' ? 'active' : ''}`}
@@ -871,10 +871,10 @@ export function Settings() {
             </button>
           </div>
 
-          {/* Content */}
+          {}
           <div className="settings-content">
 
-            {/* Profile Tab */}
+            {}
             {activeTab === 'profile' && (
               <div className="settings-card profile-card">
                 <div className="card-accent card-accent--top" />
@@ -973,7 +973,7 @@ export function Settings() {
               </div>
             )}
 
-            {/* Preferences Tab */}
+            {}
             {activeTab === 'preferences' && (
               <div className="settings-card preferences-card">
                 <div className="card-accent card-accent--top" />
@@ -1069,7 +1069,7 @@ export function Settings() {
               </div>
             )}
 
-            {/* About Tab */}
+            {}
             {activeTab === 'about' && (
               <div className="settings-card about-card">
                 <div className="card-accent card-accent--top" />
@@ -1077,7 +1077,7 @@ export function Settings() {
 
                 <div className="about-content">
 
-                  {/* Developer block */}
+                  {}
                   <div className="about-block" style={{ display: 'flex', alignItems: 'center', gap: 20 }}>
                     <div className="avatar-large" style={{ width: 64, height: 64, fontSize: 26, flexShrink: 0 }}>HS</div>
                     <div>
@@ -1091,7 +1091,7 @@ export function Settings() {
 
                   <div className="settings-divider" />
 
-                  {/* Project description */}
+                  {}
                   <div className="about-block">
                     <h3 className="features-title" style={{ marginBottom: 10 }}>About This Project</h3>
                     <p className="about-text">
@@ -1103,7 +1103,7 @@ export function Settings() {
 
                   <div className="settings-divider" />
 
-                  {/* Tech stack */}
+                  {}
                   <div className="about-block">
                     <h3 className="features-title" style={{ marginBottom: 14 }}>Tech Stack</h3>
                     <div className="about-grid" style={{ gridTemplateColumns: 'repeat(auto-fill, minmax(140px, 1fr))', gap: 12 }}>
@@ -1128,7 +1128,7 @@ export function Settings() {
 
                   <div className="settings-divider" />
 
-                  {/* Features */}
+                  {}
                   <div className="about-features">
                     <h3 className="features-title">Key Features</h3>
                     <ul className="features-list">

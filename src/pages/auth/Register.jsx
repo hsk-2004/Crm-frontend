@@ -278,13 +278,13 @@ const styles = `
   }
 `;
 
-// Helper: flatten DRF error response into a readable string
+
 function parseDRFError(err) {
   const data = err.response?.data;
   if (!data) return 'Registration failed. Please try again.';
   if (typeof data === 'string') return data;
   if (data.detail) return data.detail;
-  // Field-level errors: { email: ['...'], password: ['...'] }
+  
   const messages = Object.entries(data)
     .map(([field, msgs]) => {
       const text = Array.isArray(msgs) ? msgs.join(' ') : msgs;

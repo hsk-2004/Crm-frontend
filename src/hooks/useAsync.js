@@ -1,10 +1,7 @@
 import { useState, useCallback } from 'react';
 
-/**
- * Custom hook for managing async operations (loading, data, error states)
- * @param {Function} asyncFunction - Async function to execute
- * @returns {Object} { data, loading, error, execute }
- */
+
+
 export function useAsync(asyncFunction) {
   const [data, setData] = useState(null);
   const [loading, setLoading] = useState(false);

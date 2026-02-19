@@ -7,7 +7,7 @@ export function ThemeProvider({ children }) {
         return localStorage.getItem('app-theme') || 'dark';
     });
 
-    // Apply data-theme to <html> whenever theme changes
+    
     useEffect(() => {
         document.documentElement.setAttribute('data-theme', theme);
         localStorage.setItem('app-theme', theme);

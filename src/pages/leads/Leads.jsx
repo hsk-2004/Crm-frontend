@@ -2,7 +2,7 @@ import React, { useState, useMemo, useEffect, useCallback, useRef } from 'react'
 import { motion, AnimatePresence } from 'framer-motion';
 import { leadsApi } from '../../api/leads';
 
-// ─── Animation Variants (mirrors dashboard) ───────────────────────────────────
+
 
 const containerVariants = {
   hidden: {},
@@ -17,7 +17,7 @@ const itemVariants = {
   },
 };
 
-// ─── Status Config ────────────────────────────────────────────────────────────
+
 
 const STATUS_CONFIG = {
   new: { label: 'New', color: '#7c9cbf' },
@@ -34,7 +34,7 @@ const SORT_OPTIONS = [
   { value: 'date', label: 'Date Added' },
 ];
 
-// ─── Helpers ──────────────────────────────────────────────────────────────────
+
 
 function fmtValue(n) {
   if (!n && n !== 0) return '—';
@@ -52,7 +52,7 @@ function getAvatarColor(name = '') {
   return palette[(name.charCodeAt(0) || 0) % palette.length];
 }
 
-// ─── Sub-components ───────────────────────────────────────────────────────────
+
 
 function Skeleton({ w = '100%', h = '13px', radius = '3px' }) {
   return <div className="l-skeleton" style={{ width: w, height: h, borderRadius: radius }} />;
@@ -113,7 +113,7 @@ function EmptyState({ filtered }) {
   );
 }
 
-// ─── Icons ────────────────────────────────────────────────────────────────────
+
 
 const SearchIcon = () => (
   <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.8" strokeLinecap="round" strokeLinejoin="round">
@@ -147,21 +147,11 @@ const FilterIcon = () => (
   </svg>
 );
 
-// ─── Leads Page ───────────────────────────────────────────────────────────────
 
-/**
- * Props:
- *   leads      – Array<{
- *                  id, name, company, email, phone,
- *                  status, source, value, assigned, date
- *                }>
- *   loading    – boolean
- *   onAddLead  – () => void
- *   onExport   – () => void
- *   onEditLead – (lead) => void
- *   onDeleteLead – (lead) => void
- */
-// ─── Add Lead Modal ───────────────────────────────────────────────────────────
+
+
+
+
 
 const EMPTY_FORM = {
   name: '', company: '', email: '', phone: '',
@@ -272,7 +262,7 @@ function AddLeadModal({ onClose, onSaved }) {
   );
 }
 
-// ─── Leads Page ───────────────────────────────────────────────────────────────
+
 
 export function Leads() {
   const [leads, setLeads] = useState([]);
@@ -285,7 +275,7 @@ export function Leads() {
   const [sortAsc, setSortAsc] = useState(false);
   const [openMenu, setOpenMenu] = useState(null);
 
-  // ── Fetch leads on mount ──
+
   const fetchLeads = useCallback(async () => {
     setLoading(true); setFetchError(null);
     try {
@@ -300,7 +290,7 @@ export function Leads() {
 
   useEffect(() => { fetchLeads(); }, [fetchLeads]);
 
-  // ── Delete lead ──
+
   const handleDelete = useCallback(async (lead) => {
     setOpenMenu(null);
     try {
@@ -311,12 +301,12 @@ export function Leads() {
     }
   }, []);
 
-  // ── After a lead is saved via modal ──
+
   const handleLeadSaved = useCallback((newLead) => {
     setLeads(prev => [newLead, ...prev]);
   }, []);
 
-  // ── Convert lead to client ──
+
   const handleConvert = useCallback(async (lead) => {
     setOpenMenu(null);
     try {
@@ -327,13 +317,13 @@ export function Leads() {
     }
   }, []);
 
-  // ── Derived stats ──
+
   const newCount = leads.filter(l => l.status === 'new').length;
   const convertedCt = leads.filter(l => l.status === 'converted').length;
   const lostCt = leads.filter(l => l.status === 'lost').length;
 
 
-  // ── Filter + sort ──
+
   const filtered = useMemo(() => {
     let out = [...leads];
 
@@ -384,14 +374,14 @@ export function Leads() {
       <style>{STYLES}</style>
 
       <div className="leads">
-        {/* Ambient orbs — identical to dashboard */}
+        { }
         <div className="leads__orb leads__orb--1" />
         <div className="leads__orb leads__orb--2" />
         <div className="leads__grid-overlay" />
 
         <div className="leads__inner">
 
-          {/* ── Header ── */}
+          { }
           <motion.div className="leads__header" variants={containerVariants} initial="hidden" animate="visible">
             <div className="leads__header-left">
               <motion.span variants={itemVariants} className="leads__eyebrow">Lead Management</motion.span>
@@ -409,7 +399,7 @@ export function Leads() {
             </motion.div>
           </motion.div>
 
-          {/* ── Stat Strip ── */}
+          { }
           <motion.div className="leads-stats" variants={containerVariants} initial="hidden" animate="visible">
             <StatCard label="Total Leads" value={loading ? null : leads.length} loading={loading} />
             <StatCard label="New Leads" value={loading ? null : newCount} loading={loading} />
@@ -418,7 +408,7 @@ export function Leads() {
 
           </motion.div>
 
-          {/* ── Table Panel ── */}
+          { }
           <motion.div
             className="l-panel"
             initial={{ opacity: 0, y: 20 }}
@@ -428,9 +418,9 @@ export function Leads() {
             <div className="l-panel__topline" />
             <div className="l-panel__corner" />
 
-            {/* ── Toolbar ── */}
+            { }
             <div className="l-toolbar">
-              {/* Search */}
+              { }
               <div className="l-search">
                 <span className="l-search__icon"><SearchIcon /></span>
                 <input
@@ -442,49 +432,48 @@ export function Leads() {
               </div>
 
               <div className="l-toolbar__right">
-                {/* Status filter pills */}
-                <div className="l-filters">
+                { }
+                <div className="l-select-wrap">
                   <FilterIcon />
-                  {allStatuses.map(s => {
-                    const cfg = STATUS_CONFIG[s];
-                    const active = statusFilter === s;
-                    return (
-                      <button
-                        key={s}
-                        className={`l-filter-pill${active ? ' l-filter-pill--active' : ''}`}
-                        style={active && cfg ? {
-                          background: `${cfg.color}18`,
-                          borderColor: `${cfg.color}44`,
-                          color: cfg.color,
-                        } : {}}
-                        onClick={() => setStatus(s)}
-                      >
-                        {s === 'all' ? 'All' : STATUS_CONFIG[s]?.label}
-                      </button>
-                    );
-                  })}
+                  <select
+                    className="l-toolbar-select"
+                    value={statusFilter}
+                    onChange={e => setStatus(e.target.value)}
+                    style={statusFilter !== 'all' && STATUS_CONFIG[statusFilter] ? {
+                      color: STATUS_CONFIG[statusFilter].color,
+                      borderColor: `${STATUS_CONFIG[statusFilter].color}44`,
+                    } : {}}
+                  >
+                    <option value="all">All Statuses</option>
+                    {Object.entries(STATUS_CONFIG).map(([key, cfg]) => (
+                      <option key={key} value={key}>{cfg.label}</option>
+                    ))}
+                  </select>
                 </div>
 
-                {/* Sort */}
-                <div className="l-sort">
-                  <span className="l-sort__label">Sort</span>
-                  <div className="l-sort__options">
+                { }
+                <div className="l-select-wrap">
+                  <select
+                    className="l-toolbar-select"
+                    value={sort}
+                    onChange={e => { setSort(e.target.value); setSortAsc(false); }}
+                  >
                     {SORT_OPTIONS.map(o => (
-                      <button
-                        key={o.value}
-                        className={`l-sort__btn${sort === o.value ? ' l-sort__btn--active' : ''}`}
-                        onClick={() => handleSort(o.value)}
-                      >
-                        {o.label}
-                        {sort === o.value && <ChevronIcon asc={sortAsc} />}
-                      </button>
+                      <option key={o.value} value={o.value}>Sort: {o.label}</option>
                     ))}
-                  </div>
+                  </select>
+                  <button
+                    className="l-sort-dir-btn"
+                    onClick={() => setSortAsc(p => !p)}
+                    title={sortAsc ? 'Ascending' : 'Descending'}
+                  >
+                    <ChevronIcon asc={sortAsc} />
+                  </button>
                 </div>
               </div>
             </div>
 
-            {/* ── Table ── */}
+            { }
             <div className="l-table-wrap">
               <table className="l-table">
                 <thead>
@@ -538,7 +527,7 @@ export function Leads() {
                           animate="visible"
                           onClick={() => { }}
                         >
-                          {/* Lead cell */}
+                          { }
                           <td className="l-td">
                             <div className="l-lead-cell">
                               <Avatar name={lead.name || ''} />
@@ -590,7 +579,7 @@ export function Leads() {
               </table>
             </div>
 
-            {/* ── Footer count ── */}
+            { }
             {!loading && filtered.length > 0 && (
               <div className="l-panel__foot">
                 <span className="l-panel__count">
@@ -606,7 +595,7 @@ export function Leads() {
             </div>
           )}
 
-          {/* Footer — mirrors dashboard */}
+          { }
           <motion.p
             className="leads__footer"
             initial={{ opacity: 0 }}
@@ -621,7 +610,7 @@ export function Leads() {
   );
 }
 
-// ─── Row variant helper ───────────────────────────────────────────────────────
+
 
 function rowVariants(i) {
   return {
@@ -633,12 +622,12 @@ function rowVariants(i) {
   };
 }
 
-// ─── Styles ───────────────────────────────────────────────────────────────────
+
 
 const STYLES = `
 @import url('https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,300;0,400;0,600;1,300;1,400&family=DM+Sans:wght@300;400;500;600&family=DM+Mono:wght@300;400&display=swap');
 
-/* ── Tokens — shared with dashboard ── */
+
 :root {
   --nav-h: 64px;
   --gold:          #b8965a;
@@ -669,7 +658,7 @@ const STYLES = `
   --text-3:        rgba(10,10,15,0.40);
 }
 
-/* ── Shell — identical to .dash ── */
+
 .leads {
   min-height: calc(100vh - var(--nav-h));
   background: var(--bg);
@@ -680,11 +669,11 @@ const STYLES = `
 @media (max-width: 768px) {
   .leads {
     padding: 16px;
-    padding-bottom: 80px; /* Space for bottom nav */
+    padding-bottom: 80px; 
   }
 }
 
-/* Ambient orbs */
+
 .leads__orb {
   position: fixed;
   border-radius: 50%;
@@ -710,13 +699,13 @@ const STYLES = `
   background-size: 64px 64px;
 }
 
-/* ── Inner ── */
+
 .leads__inner {
   position: relative; z-index: 1;
   max-width: 1380px; margin: 0 auto;
 }
 
-/* ── Header — mirrors dashboard header exactly ── */
+
 .leads__header {
   display: flex;
   align-items: flex-end;
@@ -760,7 +749,7 @@ const STYLES = `
   display: flex; align-items: center; gap: 10px; flex-shrink: 0;
 }
 
-/* ── Buttons — mirrors .quick-action exactly ── */
+
 .l-btn {
   display: inline-flex; align-items: center; gap: 7px;
   padding: 9px 18px; border-radius: var(--radius);
@@ -794,7 +783,7 @@ const STYLES = `
 }
 .l-btn--primary:active { transform: translateY(0); }
 
-/* ── Skeleton shimmer ── */
+
 @keyframes shimmer {
   0%   { background-position: -400px 0; }
   100% { background-position:  400px 0; }
@@ -807,7 +796,7 @@ const STYLES = `
   border-radius: 3px;
 }
 
-/* ── Stat strip — mirrors stat-card ── */
+
 .leads-stats {
   display: grid;
   grid-template-columns: repeat(4, 1fr);
@@ -859,7 +848,7 @@ const STYLES = `
   display: block;
 }
 
-/* ── Table panel — mirrors .panel ── */
+
 .l-panel {
   position: relative;
   background: var(--surface);
@@ -882,7 +871,7 @@ const STYLES = `
   pointer-events: none;
 }
 
-/* ── Toolbar ── */
+
 .l-toolbar {
   display: flex;
   align-items: center;
@@ -899,7 +888,7 @@ const STYLES = `
   flex-wrap: wrap;
 }
 
-/* Search */
+
 .l-search {
   display: flex;
   align-items: center;
@@ -926,90 +915,117 @@ const STYLES = `
 }
 .l-search__input::placeholder { color: var(--text-3); }
 
-/* Filter pills */
-.l-filters {
-  display: flex;
-  align-items: center;
-  gap: 6px;
-  color: var(--text-3);
-}
-.l-filter-pill {
-  font-family: 'DM Mono', monospace;
-  font-size: 9px;
-  letter-spacing: 0.14em;
-  text-transform: uppercase;
-  padding: 5px 10px;
-  border-radius: 2px;
-  background: transparent;
-  border: 1px solid var(--border);
-  color: var(--text-3);
-  cursor: pointer;
-  transition: background var(--t), border-color var(--t), color var(--t);
-  white-space: nowrap;
-}
-.l-filter-pill:hover { color: var(--text-1); border-color: rgba(255,255,255,0.14); }
-.l-filter-pill--active { color: var(--text-0); border-color: rgba(255,255,255,0.18); }
 
-/* Sort */
-.l-sort {
+.l-select-wrap {
   display: flex;
   align-items: center;
-  gap: 8px;
-}
-.l-sort__label {
-  font-family: 'DM Mono', monospace;
-  font-size: 9px;
-  letter-spacing: 0.18em;
-  text-transform: uppercase;
+  gap: 7px;
   color: var(--text-3);
-  flex-shrink: 0;
 }
-.l-sort__options {
-  display: flex;
-  gap: 4px;
-}
-.l-sort__btn {
+.l-toolbar-select {
   font-family: 'DM Mono', monospace;
-  font-size: 9px;
+  font-size: 10px;
   letter-spacing: 0.12em;
   text-transform: uppercase;
-  padding: 5px 9px;
-  border-radius: 2px;
-  background: transparent;
-  border: 1px solid transparent;
-  color: var(--text-3);
+  padding: 7px 28px 7px 10px;
+  border-radius: var(--radius);
+  background: rgba(255,255,255,0.04);
+  border: 1px solid var(--border);
+  color: var(--text-2);
   cursor: pointer;
-  display: inline-flex;
-  align-items: center;
-  gap: 4px;
-  transition: color var(--t), border-color var(--t), background var(--t);
+  outline: none;
+  appearance: none;
+  -webkit-appearance: none;
+  background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='10' height='10' viewBox='0 0 24 24' fill='none' stroke='rgba(240,236,228,0.4)' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'%3E%3Cpolyline points='6 9 12 15 18 9'/%3E%3C/svg%3E");
+  background-repeat: no-repeat;
+  background-position: right 8px center;
+  transition: border-color var(--t), background var(--t), color var(--t);
+  white-space: nowrap;
+  min-width: 120px;
 }
-.l-sort__btn:hover { color: var(--text-1); }
-.l-sort__btn--active {
-  color: var(--gold);
+.l-toolbar-select:hover {
+  border-color: rgba(255,255,255,0.14);
+  color: var(--text-1);
+}
+.l-toolbar-select:focus {
   border-color: var(--border-gold);
+  background-color: rgba(184,150,90,0.05);
+}
+.l-toolbar-select option {
+  background: #13131a;
+  color: var(--text-1);
+  font-family: 'DM Mono', monospace;
+  font-size: 10px;
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
+}
+
+
+.l-sort-dir-btn {
+  background: rgba(255,255,255,0.04);
+  border: 1px solid var(--border);
+  border-radius: var(--radius);
+  color: var(--text-2);
+  cursor: pointer;
+  padding: 6px 8px;
+  display: flex;
+  align-items: center;
+  transition: background var(--t), border-color var(--t), color var(--t);
+}
+.l-sort-dir-btn:hover {
+  border-color: var(--border-gold);
+  color: var(--gold);
   background: var(--gold-soft);
 }
 
-/* ── Responsive Toolbar ── */
+
 @media (max-width: 700px) {
-  .l-toolbar, .l-toolbar__right {
+  
+  .l-toolbar {
     flex-direction: column;
     align-items: stretch;
-    width: 100%;
-    margin: 0;
+    gap: 10px;
+    padding: 14px 14px 12px;
   }
-  .l-search { width: 100%; box-sizing: border-box; }
-  .l-filters, .l-sort {
+
+  
+  .l-search {
     width: 100%;
-    justify-content: space-between;
-    overflow-x: auto;
-    padding-bottom: 4px;
-    margin-top: 10px;
+    box-sizing: border-box;
+  }
+
+  
+  .l-toolbar__right {
+    flex-direction: row;
+    flex-wrap: nowrap;
+    margin-left: 0;
+    gap: 8px;
+    width: 100%;
+  }
+
+  
+  .l-select-wrap {
+    flex: 1;
+    min-width: 0;
+  }
+
+  
+  .l-toolbar-select {
+    width: 100%;
+    min-width: 0;
+    box-sizing: border-box;
+    font-size: 10px;
+    padding: 8px 24px 8px 10px;
+  }
+
+  
+  .l-sort-dir-btn {
+    flex-shrink: 0;
+    padding: 8px 10px;
   }
 }
 
-/* ── Table ── */
+
 .l-table-wrap {
   overflow-x: auto;
 }
@@ -1047,7 +1063,7 @@ const STYLES = `
 .l-td--num     { text-align: right; }
 .l-td--actions { text-align: right; }
 
-/* Lead cell */
+
 .l-lead-cell {
   display: flex;
   align-items: center;
@@ -1084,7 +1100,7 @@ const STYLES = `
   letter-spacing: 0.02em;
 }
 
-/* Badge */
+
 .l-badge {
   display: inline-flex;
   align-items: center;
@@ -1103,7 +1119,7 @@ const STYLES = `
   flex-shrink: 0;
 }
 
-/* Other cells */
+
 .l-source {
   font-size: 13.5px;
   font-weight: 300;
@@ -1128,7 +1144,7 @@ const STYLES = `
   white-space: nowrap;
 }
 
-/* Context menu */
+
 .l-menu-wrap { position: relative; display: inline-block; }
 .l-dots-btn {
   background: none;
@@ -1181,7 +1197,7 @@ const STYLES = `
 .l-menu__item--convert { color: rgba(184,150,90,0.8); }
 .l-menu__item--convert:hover { color: var(--gold); background: rgba(184,150,90,0.08); }
 
-/* Panel footer */
+
 .l-panel__foot {
   padding: 14px 22px;
   border-top: 1px solid rgba(255,255,255,0.04);
@@ -1194,7 +1210,7 @@ const STYLES = `
   color: var(--text-3);
 }
 
-/* Empty state */
+
 .l-empty {
   display: flex;
   flex-direction: column;
@@ -1217,7 +1233,7 @@ const STYLES = `
   margin: 0;
 }
 
-/* Footer */
+
 .leads__footer {
   text-align: center;
   margin-top: 44px;
@@ -1229,78 +1245,102 @@ const STYLES = `
   user-select: none;
 }
 
-/* Responsive */
+
 @media (max-width: 700px) {
   .l-toolbar { flex-direction: column; align-items: stretch; }
   .l-toolbar__right { margin-left: 0; }
   .l-search { width: 100%; }
 }
 
-/* ── Responsive Table ── */
+
 @media (max-width: 768px) {
   .l-table-wrap { overflow-x: visible; }
   .l-table { display: block; }
   .l-table thead { display: none; }
   .l-table tbody { display: block; }
+
+  
   .l-tr {
     display: block;
     position: relative;
-    background: rgba(255,255,255,0.02);
+    background: rgba(255,255,255,0.025);
     border: 1px solid var(--border);
     border-radius: var(--radius);
-    margin-bottom: 16px;
-    padding: 16px;
+    margin-bottom: 14px;
+    padding: 0;
+    overflow: hidden;
+    cursor: default;
+    box-shadow: 0 4px 16px rgba(0,0,0,0.25);
+  }
+  
+  .l-tr::before {
+    content: '';
+    display: block;
+    height: 1px;
+    background: linear-gradient(90deg, transparent, rgba(184,150,90,0.5), transparent);
   }
   .l-tr:hover { background: rgba(255,255,255,0.04); }
+
+  
+  .l-td:first-child {
+    display: flex;
+    align-items: flex-start;
+    gap: 12px;
+    padding: 14px 48px 12px 14px;
+    border-bottom: 1px solid rgba(255,255,255,0.055);
+    text-align: left;
+  }
+  .l-td:first-child::before { display: none; }
+
   
   .l-td {
     display: flex;
     justify-content: space-between;
     align-items: center;
-    padding: 6px 0;
+    padding: 9px 14px;
     border: none;
+    border-bottom: 1px solid rgba(255,255,255,0.03);
     text-align: right;
   }
+
+  
   .l-td::before {
     content: attr(data-label);
     font-family: 'DM Mono', monospace;
-    font-size: 10px;
+    font-size: 9.5px;
     color: var(--text-3);
     text-transform: uppercase;
-    letter-spacing: 0.1em;
-    margin-right: 12px;
-    text-align: left;
+    letter-spacing: 0.12em;
     flex-shrink: 0;
-  }
-  
-  /* First cell (Lead info) - full width and distinct */
-  .l-td:first-child {
-    display: block;
     text-align: left;
-    padding-bottom: 12px;
-    border-bottom: 1px solid var(--border);
-    margin-bottom: 8px;
-    padding-right: 32px; /* Space for action button */
+    margin-right: 10px;
   }
-  .l-td:first-child::before { display: none; }
+
   
-  /* Actions - absolute positioned top right */
   .l-td--actions {
     position: absolute;
-    top: 16px;
-    right: 16px;
+    top: 10px;
+    right: 10px;
     padding: 0;
+    border: none;
     width: auto;
-    justify-content: flex-end;
+    background: none;
+    border-bottom: none;
   }
   .l-td--actions::before { display: none; }
+
   
-  /* Adjust inner alignments */
-  .l-lead-cell { gap: 12px; }
-  .l-value { font-size: 14px; }
+  .l-lead-cell  { gap: 10px; flex-direction: row; align-items: flex-start; }
+  .l-lead-name  { font-size: 14px; }
+  .l-lead-company { font-size: 12px; }
+  .l-lead-email { font-size: 11px; }
+  .l-value { font-size: 13px; }
+  .l-badge { font-size: 10px; padding: 3px 8px; }
+  .l-source, .l-assigned { font-size: 13px; color: var(--text-2); }
+  .l-date { font-size: 11px; }
 }
 
-/* ── Add Lead Modal ── */
+
 .lm-overlay {
   position: fixed; inset: 0; z-index: 200;
   background: rgba(0,0,0,0.65);

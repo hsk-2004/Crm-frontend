@@ -35,7 +35,7 @@ const authLayoutStyles = `
 }
 `;
 
-// Inject styles
+
 if (typeof document !== 'undefined') {
   const style = document.createElement('style');
   style.textContent = authLayoutStyles;

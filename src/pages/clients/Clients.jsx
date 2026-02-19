@@ -2,7 +2,7 @@ import React, { useState, useMemo, useEffect, useCallback } from 'react';
 import { motion } from 'framer-motion';
 import { clientsApi } from '../../api/clients';
 
-// ─── Animation Variants (mirrors dashboard) ───────────────────────────────────
+
 
 const containerVariants = {
   hidden: {},
@@ -27,7 +27,7 @@ function rowVariants(i) {
   };
 }
 
-// ─── Config ───────────────────────────────────────────────────────────────────
+
 
 const HEALTH_CONFIG = {
   active: { label: 'Active', color: '#6ab5a0' },
@@ -44,7 +44,7 @@ const SORT_OPTIONS = [
   { value: 'since', label: 'Client Since' },
 ];
 
-// ─── Helpers ──────────────────────────────────────────────────────────────────
+
 
 function fmtRevenue(n) {
   if (!n && n !== 0) return '—';
@@ -62,7 +62,7 @@ function getAvatarColor(name = '') {
   return palette[(name.charCodeAt(0) || 0) % palette.length];
 }
 
-// ─── Sub-components ───────────────────────────────────────────────────────────
+
 
 function Skeleton({ w = '100%', h = '13px', radius = '3px' }) {
   return <div className="c-skeleton" style={{ width: w, height: h, borderRadius: radius }} />;
@@ -126,7 +126,7 @@ function EmptyState({ filtered }) {
   );
 }
 
-// ─── Icons ────────────────────────────────────────────────────────────────────
+
 
 const SearchIcon = () => (
   <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.8" strokeLinecap="round" strokeLinejoin="round">
@@ -166,22 +166,10 @@ const LinkIcon = () => (
   </svg>
 );
 
-// ─── Clients Page ─────────────────────────────────────────────────────────────
 
-/**
- * Props:
- *   clients        – Array<{
- *                     id, name, company, email, phone,
- *                     health, industry, revenue, mrr,
- *                     assigned, since, contacts, logo?
- *                   }>
- *   loading        – boolean
- *   onAddClient    – () => void
- *   onExport       – () => void
- *   onViewClient   – (client) => void
- *   onEditClient   – (client) => void
- *   onDeleteClient – (client) => void
- */
+
+
+
 export function Clients() {
   const [clients, setClients] = useState([]);
   const [loading, setLoading] = useState(true);
@@ -192,7 +180,7 @@ export function Clients() {
   const [sortAsc, setSortAsc] = useState(true);
   const [openMenu, setOpenMenu] = useState(null);
 
-  // ── Fetch clients on mount ──
+  
   const fetchClients = useCallback(async () => {
     setLoading(true); setFetchError(null);
     try {
@@ -207,7 +195,7 @@ export function Clients() {
 
   useEffect(() => { fetchClients(); }, [fetchClients]);
 
-  // ── Delete client ──
+  
   const handleDelete = useCallback(async (client) => {
     setOpenMenu(null);
     try {
@@ -218,13 +206,13 @@ export function Clients() {
     }
   }, []);
 
-  // ── Derived stats ──
+  
   const totalRevenue = clients.reduce((s, c) => s + (Number(c.revenue) || 0), 0);
   const totalMrr = clients.reduce((s, c) => s + (Number(c.mrr) || 0), 0);
   const activeCount = clients.filter(c => c.health === 'active').length;
   const atRiskCount = clients.filter(c => c.health === 'at_risk').length;
 
-  // ── Filter + sort ──
+  
   const filtered = useMemo(() => {
     let out = [...clients];
 
@@ -274,7 +262,7 @@ export function Clients() {
 
         <div className="clients__inner">
 
-          {/* ── Header ── */}
+          {}
           <motion.div className="clients__header" variants={containerVariants} initial="hidden" animate="visible">
             <div className="clients__header-left">
               <motion.span variants={itemVariants} className="clients__eyebrow">Client Management</motion.span>
@@ -291,7 +279,7 @@ export function Clients() {
             </motion.div>
           </motion.div>
 
-          {/* ── Stat Strip ── */}
+          {}
           <motion.div className="clients-stats" variants={containerVariants} initial="hidden" animate="visible">
             <StatCard label="Total Clients" value={loading ? null : clients.length} loading={loading} />
             <StatCard label="Total Revenue" value={loading ? null : fmtRevenue(totalRevenue)} loading={loading} />
@@ -299,7 +287,7 @@ export function Clients() {
             <StatCard label="Active" value={loading ? null : activeCount} loading={loading} />
           </motion.div>
 
-          {/* ── At-risk callout (only when data exists) ── */}
+          {}
           {!loading && atRiskCount > 0 && (
             <motion.div
               className="c-risk-banner"
@@ -317,7 +305,7 @@ export function Clients() {
             </motion.div>
           )}
 
-          {/* ── Table Panel ── */}
+          {}
           <motion.div
             className="c-panel"
             initial={{ opacity: 0, y: 20 }}
@@ -327,7 +315,7 @@ export function Clients() {
             <div className="c-panel__topline" />
             <div className="c-panel__corner" />
 
-            {/* ── Toolbar ── */}
+            {}
             <div className="c-toolbar">
               <div className="c-search">
                 <span className="c-search__icon"><SearchIcon /></span>
@@ -340,7 +328,7 @@ export function Clients() {
               </div>
 
               <div className="c-toolbar__right">
-                {/* Health filter pills */}
+                {}
                 <div className="c-filters">
                   <FilterIcon />
                   {allHealths.map(h => {
@@ -363,7 +351,7 @@ export function Clients() {
                   })}
                 </div>
 
-                {/* Sort */}
+                {}
                 <div className="c-sort">
                   <span className="c-sort__label">Sort</span>
                   <div className="c-sort__options">
@@ -382,7 +370,7 @@ export function Clients() {
               </div>
             </div>
 
-            {/* ── Table ── */}
+            {}
             <div className="c-table-wrap">
               <table className="c-table">
                 <thead>
@@ -437,7 +425,7 @@ export function Clients() {
                           animate="visible"
                           onClick={() => { }}
                         >
-                          {/* Client cell */}
+                          {}
                           <td className="c-td">
                             <div className="c-client-cell">
                               <Avatar name={client.name || client.company || ''} logo={client.logo} />
@@ -473,7 +461,7 @@ export function Clients() {
                             <span className="c-since">{client.since || '—'}</span>
                           </td>
 
-                          {/* Actions */}
+                          {}
                           <td className="c-td c-td--actions" onClick={e => e.stopPropagation()}>
                             <div className="c-menu-wrap">
                               <button
@@ -499,7 +487,7 @@ export function Clients() {
               </table>
             </div>
 
-            {/* Footer count */}
+            {}
             {!loading && filtered.length > 0 && (
               <div className="c-panel__foot">
                 <span className="c-panel__count">
@@ -515,7 +503,7 @@ export function Clients() {
             )}
           </motion.div>
 
-          {/* Footer */}
+          {}
           <motion.p
             className="clients__footer"
             initial={{ opacity: 0 }}
@@ -530,7 +518,7 @@ export function Clients() {
   );
 }
 
-// ─── Styles ───────────────────────────────────────────────────────────────────
+
 
 const STYLES = `
 @import url('https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,300;0,400;0,600;1,300;1,400&family=DM+Sans:wght@300;400;500;600&family=DM+Mono:wght@300;400&display=swap');
@@ -565,7 +553,7 @@ const STYLES = `
   --text-3:        rgba(10,10,15,0.40);
 }
 
-/* ── Shell ── */
+
 .clients {
   min-height: calc(100vh - var(--nav-h));
   background: var(--bg);
@@ -604,7 +592,7 @@ const STYLES = `
   max-width: 1380px; margin: 0 auto;
 }
 
-/* ── Header ── */
+
 .clients__header {
   display: flex; align-items: flex-end; justify-content: space-between;
   flex-wrap: wrap; gap: 20px; margin-bottom: 28px;
@@ -631,7 +619,7 @@ const STYLES = `
 }
 .clients__header-actions { display: flex; align-items: center; gap: 10px; flex-shrink: 0; }
 
-/* ── Buttons ── */
+
 .c-btn {
   display: inline-flex; align-items: center; gap: 7px;
   padding: 9px 18px; border-radius: var(--radius);
@@ -655,7 +643,7 @@ const STYLES = `
 }
 .c-btn--primary:active { transform: translateY(0); }
 
-/* ── Skeleton ── */
+
 @keyframes shimmer {
   0%   { background-position: -400px 0; }
   100% { background-position:  400px 0; }
@@ -668,7 +656,7 @@ const STYLES = `
   border-radius: 3px;
 }
 
-/* ── Stat strip ── */
+
 .clients-stats {
   display: grid; grid-template-columns: repeat(4, 1fr);
   gap: 14px; margin-bottom: 14px;
@@ -708,7 +696,7 @@ const STYLES = `
   color: var(--text-2); display: block;
 }
 
-/* ── At-risk banner ── */
+
 .c-risk-banner {
   display: flex; align-items: center; gap: 10px;
   padding: 11px 18px; margin-bottom: 14px;
@@ -732,7 +720,7 @@ const STYLES = `
 }
 .c-risk-banner__filter:hover { color: #c07070; }
 
-/* ── Table panel ── */
+
 .c-panel {
   position: relative;
   background: var(--surface); border: 1px solid var(--border);
@@ -752,7 +740,7 @@ const STYLES = `
   pointer-events: none;
 }
 
-/* ── Toolbar ── */
+
 .c-toolbar {
   display: flex; align-items: center; gap: 12px;
   padding: 18px 22px 16px; border-bottom: 1px solid var(--border);
@@ -811,7 +799,7 @@ const STYLES = `
   color: var(--gold); border-color: var(--border-gold); background: var(--gold-soft);
 }
 
-/* ── Responsive Toolbar ── */
+
 @media (max-width: 700px) {
   .c-toolbar, .c-toolbar__right {
     flex-direction: column;
@@ -829,7 +817,7 @@ const STYLES = `
   }
 }
 
-/* ── Table ── */
+
 .c-table-wrap { overflow-x: auto; }
 .c-table { width: 100%; border-collapse: collapse; }
 .c-th {
@@ -854,7 +842,7 @@ const STYLES = `
 .c-td--num     { text-align: right; }
 .c-td--actions { text-align: right; }
 
-/* Client cell */
+
 .c-client-cell { display: flex; align-items: center; gap: 12px; }
 .c-avatar {
   width: 36px; height: 36px; border-radius: var(--radius);
@@ -871,7 +859,7 @@ const STYLES = `
   color: var(--text-3); letter-spacing: 0.02em;
 }
 
-/* Badge */
+
 .c-badge {
   display: inline-flex; align-items: center; gap: 5px;
   padding: 4px 9px; border-radius: 2px;
@@ -886,7 +874,7 @@ const STYLES = `
 .c-assigned  { font-size: 13.5px; font-weight: 300; color: var(--text-2); }
 .c-since     { font-family: 'DM Mono', monospace; font-size: 12px; color: var(--text-3); letter-spacing: 0.04em; white-space: nowrap; }
 
-/* Context menu */
+
 .c-menu-wrap { position: relative; display: inline-block; }
 .c-dots-btn {
   background: none; border: none; color: var(--text-3); cursor: pointer;
@@ -919,7 +907,7 @@ const STYLES = `
 .c-menu__item--danger:hover { color: rgba(220,110,110,1); background: rgba(200,80,80,0.08); }
 .c-menu__divider { height: 1px; background: var(--border); margin: 2px 0; }
 
-/* Panel footer */
+
 .c-panel__foot {
   display: flex; align-items: center; gap: 14px;
   padding: 14px 22px; border-top: 1px solid rgba(255,255,255,0.04);
@@ -938,7 +926,7 @@ const STYLES = `
   width: 5px; height: 5px; border-radius: 50%; background: #c07070;
 }
 
-/* Empty */
+
 .c-empty {
   display: flex; flex-direction: column; align-items: center;
   padding: 52px 0; gap: 12px;
@@ -951,7 +939,7 @@ const STYLES = `
 }
 .c-empty p { font-size: 12px; color: var(--text-3); font-weight: 300; margin: 0; }
 
-/* Footer */
+
 .clients__footer {
   text-align: center; margin-top: 44px;
   font-family: 'DM Mono', monospace; font-size: 10px;
@@ -959,7 +947,7 @@ const STYLES = `
   color: var(--text-3); user-select: none;
 }
 
-/* ── Responsive Table ── */
+
 @media (max-width: 768px) {
   .c-table-wrap { overflow-x: visible; }
   .c-table { display: block; }
@@ -996,18 +984,18 @@ const STYLES = `
     flex-shrink: 0;
   }
   
-  /* First cell (Client info) - full width and distinct */
+  
   .c-td:first-child {
     display: block;
     text-align: left;
     padding-bottom: 12px;
     border-bottom: 1px solid var(--border);
     margin-bottom: 8px;
-    padding-right: 32px; /* Space for action button */
+    padding-right: 32px; 
   }
   .c-td:first-child::before { display: none; }
   
-  /* Actions - absolute positioned top right */
+  
   .c-td--actions {
     position: absolute;
     top: 16px;
@@ -1018,7 +1006,7 @@ const STYLES = `
   }
   .c-td--actions::before { display: none; }
   
-  /* Adjust inner alignments */
+  
   .c-client-cell { gap: 12px; }
   .c-revenue, .c-mrr { font-size: 14px; }
 }

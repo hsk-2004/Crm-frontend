@@ -2,12 +2,12 @@ import React, { useState, useEffect } from 'react';
 import { Link, useNavigate } from 'react-router-dom';
 import { useAuth } from '../../hooks/useAuth';
 
-// ─── Styles ───────────────────────────────────────────────────────────────────
+
 
 const STYLES = `
 @import url('https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,300;0,400;0,600;1,300;1,400&family=DM+Sans:wght@300;400;500;600&family=DM+Mono:wght@300;400&display=swap');
 
-/* ── Tokens (mirrors dashboard) ── */
+
 :root {
   --nav-h: 64px;
   --gold:          #b8965a;
@@ -38,7 +38,7 @@ const STYLES = `
   --text-3:        rgba(10,10,15,0.40);
 }
 
-/* ── Navbar shell ── */
+
 .navbar {
   position: sticky;
   top: 0;
@@ -56,7 +56,7 @@ const STYLES = `
   background: rgba(245,243,239,0.92);
 }
 
-/* topline shimmer — identical to .stat-card__topline */
+
 .navbar::before {
   content: '';
   position: absolute;
@@ -67,7 +67,7 @@ const STYLES = `
   pointer-events: none;
 }
 
-/* corner tick — identical to .stat-card__corner */
+
 .navbar::after {
   content: '';
   position: absolute;
@@ -86,7 +86,7 @@ const STYLES = `
 .navbar--scrolled::before { opacity: 1; }
 .navbar--scrolled::after  { border-color: rgba(184,150,90,0.55); }
 
-/* ── Container — same max-width + padding as .dash__inner ── */
+
 .navbar-container {
   max-width: 1380px;
   margin: 0 auto;
@@ -97,7 +97,7 @@ const STYLES = `
   justify-content: space-between;
 }
 
-/* ── Logo ── */
+
 .navbar-logo {
   display: flex;
   align-items: center;
@@ -107,7 +107,7 @@ const STYLES = `
 }
 .navbar-logo:hover { opacity: 0.75; }
 
-/* identical sizing + treatment to .stat-card__icon */
+
 .navbar-logo__icon {
   width: 32px;
   height: 32px;
@@ -126,7 +126,7 @@ const STYLES = `
   box-shadow: 0 0 14px var(--gold-glow);
 }
 
-/* name — mirrors .dash__title weight + family */
+
 .navbar-logo__name {
   font-family: 'Cormorant Garamond', Georgia, serif;
   font-size: 22px;
@@ -137,7 +137,7 @@ const STYLES = `
   display: block;
 }
 
-/* eyebrow — mirrors .dash__eyebrow / .panel__label */
+
 .navbar-logo__eyebrow {
   font-family: 'DM Mono', monospace;
   font-size: 9.5px;
@@ -148,7 +148,7 @@ const STYLES = `
   margin-top: 3px;
 }
 
-/* rule — mirrors .dash__rule */
+
 .navbar-logo__rule {
   width: 24px;
   height: 1px;
@@ -156,14 +156,14 @@ const STYLES = `
   margin-top: 5px;
 }
 
-/* ── Right side ── */
+
 .navbar-menu {
   display: flex;
   align-items: center;
   gap: 10px;
 }
 
-/* vertical separator */
+
 .navbar-sep {
   width: 1px;
   height: 22px;
@@ -171,7 +171,7 @@ const STYLES = `
   flex-shrink: 0;
 }
 
-/* ── User chip ── */
+
 .navbar-user {
   display: flex;
   align-items: center;
@@ -188,7 +188,7 @@ const STYLES = `
   border-color: var(--border-gold);
 }
 
-/* avatar — borrows .activity-row__avatar palette */
+
 .navbar-avatar {
   width: 28px;
   height: 28px;
@@ -205,7 +205,7 @@ const STYLES = `
   flex-shrink: 0;
 }
 
-/* name — mirrors .activity-row__name */
+
 .navbar-user__name {
   font-size: 14px;
   font-weight: 400;
@@ -217,7 +217,7 @@ const STYLES = `
   letter-spacing: 0.01em;
 }
 
-/* ── Sign out — mirrors .quick-action--ghost exactly ── */
+
 .navbar-logout {
   display: inline-flex;
   align-items: center;
@@ -256,7 +256,7 @@ const STYLES = `
 }
 @keyframes spin { to { transform: rotate(360deg); } }
 
-/* ── Sign in — mirrors .quick-action--primary exactly ── */
+
 .navbar-login {
   display: inline-flex;
   align-items: center;
@@ -282,19 +282,19 @@ const STYLES = `
 }
 .navbar-login:active { transform: translateY(0); }
 
-/* ── Responsive ── */
+
 @media (max-width: 520px) {
   .navbar-logo__eyebrow,
   .navbar-logo__rule { display: none; }
   .navbar-user__name { display: none; }
   .navbar-sep        { display: none; }
   .navbar-logout__label { display: none; }
-  .navbar-logout { padding: 9px; } /* Icon only padding */
+  .navbar-logout { padding: 9px; } 
   .navbar-container  { padding: 0 16px; }
 }
 `;
 
-// ─── Icons (same strokeWidth=1.5 convention as dashboard) ────────────────────
+
 
 function GridIcon() {
   return (
@@ -328,7 +328,7 @@ function ArrowIcon() {
   );
 }
 
-// ─── Component ────────────────────────────────────────────────────────────────
+
 
 export function Navbar() {
   const { user, logout } = useAuth();
@@ -359,7 +359,7 @@ export function Navbar() {
       <nav className={`navbar${scrolled ? ' navbar--scrolled' : ''}`}>
         <div className="navbar-container">
 
-          {/* Logo */}
+          {}
           <Link to="/" className="navbar-logo">
             <div className="navbar-logo__icon">
               <GridIcon />
@@ -371,7 +371,7 @@ export function Navbar() {
             </div>
           </Link>
 
-          {/* Right */}
+          {}
           <div className="navbar-menu">
             {user ? (
               <>

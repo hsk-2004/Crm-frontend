@@ -1,4 +1,4 @@
-/* ── Layout shell ── */
+
 .main-layout {
   display: flex;
   flex-direction: column;
@@ -21,13 +21,13 @@
   padding: 0;
 }
 
-/* ── Mobile: bottom tab bar layout ── */
+
 @media (max-width: 768px) {
   .layout-container {
     flex-direction: column;
   }
 
-  /* Give content room above the bottom tab bar */
+  
   .layout-content {
     padding-bottom: 68px;
   }

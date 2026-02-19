@@ -8,77 +8,21 @@ export function AuthProvider({ children }) {
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
 
-  // ✅ Check authentication on app load
-  // ✅ Check authentication on app load
+  // ── TEMP: Auth disabled — always authenticated ──
   useEffect(() => {
-    // TEMPORARY: Bypass login for demo
     setUser({
       first_name: 'Harman',
+      last_name: 'Singh',
       email: 'harman@local.dev',
-      authenticated: true
+      authenticated: true,
     });
     setLoading(false);
-
-    /* 
-    const token = localStorage.getItem('access_token');
-    if (token) {
-      setUser({ authenticated: true });
-    }
-    setLoading(false);
-    */
   }, []);
 
-  // ✅ LOGIN
-  const login = async (email, password) => {
-    try {
-      setError(null);
-
-      const response = await apiClient.post('login/', {
-        email,
-        password,
-      });
-
-      const { access, refresh } = response.data;
-
-      // Store tokens
-      localStorage.setItem('access_token', access);
-      localStorage.setItem('refresh_token', refresh);
-
-      setUser({ email, authenticated: true });
-
-      return response.data;
-    } catch (err) {
-      setError(
-        err.response?.data?.detail ||
-        'Invalid email or password'
-      );
-      throw err;
-    }
-  };
-
-  // ✅ REGISTER
-  const register = async (userData) => {
-    try {
-      setError(null);
-
-      const response = await apiClient.post('register/', userData);
-
-      return response.data;
-    } catch (err) {
-      setError(
-        err.response?.data?.detail ||
-        'Registration failed'
-      );
-      throw err;
-    }
-  };
-
-  // ✅ LOGOUT
-  const logout = () => {
-    localStorage.removeItem('access_token');
-    localStorage.removeItem('refresh_token');
-    setUser(null);
-  };
+  // ── TEMP: login/register/logout are no-ops ──
+  const login = async () => { };
+  const register = async () => { };
+  const logout = () => { };
 
   const isAuthenticated = !!user;
 
