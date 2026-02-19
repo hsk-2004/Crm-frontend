@@ -675,13 +675,14 @@ const STYLES = `
   background: var(--bg);
   padding: clamp(24px, 3.5vw, 44px);
   font-family: 'DM Sans', sans-serif;
-  /* ── Mobile padding ── */
-  @media (max-width: 768px) {
-    .leads {
-      padding: 16px;
-      padding-bottom: 80px; /* Space for bottom nav */
-    }
+}
+
+@media (max-width: 768px) {
+  .leads {
+    padding: 16px;
+    padding-bottom: 80px; /* Space for bottom nav */
   }
+}
 
 /* Ambient orbs */
 .leads__orb {
